@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "The Web Note",
+  "description": "Chrome extension to add notes on website and get it popped up when you visit the site again.",
+  "version": "1.0.0",
+
+  "action": {
+      "default_popup": "index.html",
+      "default_title": "TheWebNote",
+          "default_icon": {
+      "16": "icons/icon128.png",
+      "32": "icons/icon128.png",
+      "48": "icons/icon128.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "options_page": "dashboard.html",
+
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+
+  "icons": {
+    "16": "icons/icon128.png",
+    "32": "icons/icon128.png",
+    "48": "icons/icon128.png",
+    "128": "icons/icon128.png"
+  }
+}
