@@ -5,8 +5,70 @@
 
 </head>
 <body>
-    <h1>The Web Note</h1>
+    <!-- <h1>The Web Note</h1>
     <button>Add</button>
-    <button>Dashboard</button>
+    <button>Dashboard</button> -->
+
+     <header>
+        <div class="logo-container">
+            <img src="assets/icons/icon128.png" alt="logo" height="40px" width="40px">
+            <h1 class="app-name">The Web Note</h1>
+        </div>
+
+        <div class="nav-controls">
+            <button class="btn btn-add">
+                <span>+</span> Add Task
+            </button>
+            <button class="btn btn-dashboard">
+             Dashboard
+            </button>
+        </div>
+    </header>
+
+    <main class="task-container">
+        <!-- Important Task -->
+        <div class="task-card priority-important">
+            <!-- <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Critical+Update'"> -->
+            <div class="task-content">
+                <p class="task-desc">Submit the final draft to the executive board by EOD tomorrow. This is high priority.</p>
+                <div class="task-footer">
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medium Task -->
+        <div class="task-card priority-medium">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Meeting+Notes'">
+            <div class="task-content">
+                <p class="task-desc">Prepare the Miro board for the UI/UX session scheduled for Wednesday afternoon.</p>
+                <div class="task-footer">
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Normal Task -->
+        <div class="task-card priority-normal">
+            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Fitness+Goals'">
+            <div class="task-content">
+                <p class="task-desc">Book a slot for the Friday evening restorative yoga class at the local studio.</p>
+                <div class="task-footer">
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Another Normal Task -->
+        <div class="task-card priority-normal">
+            <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Grocery+List'">
+            <div class="task-content">
+                <p class="task-desc">Pick up almond milk, fresh berries, and whole-grain bread on the way home.</p>
+                <div class="task-footer">
+                    <button class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
