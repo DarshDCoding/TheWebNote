@@ -4,31 +4,45 @@ A powerful browser extension that brings note-taking capabilities directly to yo
 
 ## ✨ Features
 
-- 📌 Create and save notes while browsing
-- 🎨 Beautiful, intuitive dashboard interface
-- ⚡ Lightning-fast performance
-- 🔄 Seamless content integration
+- 📌 Create and save notes while browsing  
+- 📝 Add notes specific to individual websites  
+- 🔔 See notes pop up automatically when you revisit a site  
+- 🖼️ Store images and screenshots alongside your notes  
+- 📂 View notes from all websites in one central dashboard  
+- 🔒 **Complete data privacy** — the extension runs locally and your data never leaves your device
 
 ---
 
-## 🚀 Installation Guide
+## 🚀 Installation (quick and simple)
 
-### Step 1: Open Extensions Page
-Navigate to the Chrome Extensions page by entering the following in your address bar:
-```
-chrome://extensions
-```
+### Download from GitHub (for non-technical users)
+If you're not used to GitHub, don't worry – this is just like downloading any other file. Since you're already on the project page, follow these simple steps:
 
-### Step 2: Enable Developer Mode
-- Look for the **Developer Mode** toggle in the top-right corner
-- Click to enable it
+1. On the repository page, click the green **Code** button at the top right.
+2. Choose **Download ZIP** from the dropdown menu.
+3. Once the ZIP file finishes downloading, locate it (usually in your Downloads folder) and extract its contents to a folder on your computer (for example, your Desktop).
 
-### Step 3: Load the Extension
-- Click the **Load unpacked** button that appears
-- Select the extension directory from your file system
+> 📌 Remember the location of the folder you just created – you'll need to select it in the next section.
 
-### Step 4: All Set! 🎉
-The extension is now installed and ready to use. You'll see an icon in your Chrome toolbar to access TheWebNote.
+### Load into Chrome
+1. Open Chrome and go to `chrome://extensions`.
+2. Turn on **Developer mode** using the toggle at the top right.
+3. Click **Load unpacked**, choose the folder where you extracted the files (it should contain `manifest.json`), and click **Open**.
+4. Once it appears in the list, the extension is installed; its icon will show in the toolbar.
+
+![Installation Screenshot](screenshot-install.png)
+
+That's it – TheWebNote is ready to use!
+
+
+---
+
+## 🚧 Future Plans
+
+We’re constantly working to make TheWebNote even better. Upcoming features include:
+
+- 🔁 Share note data between devices or with other people
+- 🎨 Use a canvas tool to draw and save sketches directly in your notes
 
 ---
 
@@ -48,7 +62,16 @@ TheWebNote/
 
 ---
 
-## 💡 How It Works
+## � Future Plans
+
+We’re constantly working to make TheWebNote even better. Upcoming features include:
+
+- 🔁 Share note data between devices or with other people
+- 🎨 Use a canvas tool to draw and save sketches directly in your notes
+
+---
+
+## �💡 How It Works
 
 1. **Content Script** - Integrates with web pages you visit
 2. **Dashboard** - Your central hub for managing notes
