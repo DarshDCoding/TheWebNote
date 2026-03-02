@@ -8,10 +8,10 @@
       "default_popup": "index.html",
       "default_title": "TheWebNote",
           "default_icon": {
-      "16": "icons/icon128.png",
-      "32": "icons/icon128.png",
-      "48": "icons/icon128.png",
-      "128": "icons/icon128.png"
+      "16": "assets/icons/icon128.png",
+      "32": "assets/icons/icon128.png",
+      "48": "assets/icons/icon128.png",
+      "128":"assets/icons/icon128.png"
     }
   },
 
@@ -38,9 +38,9 @@
   ],
 
   "icons": {
-    "16": "icons/icon128.png",
-    "32": "icons/icon128.png",
-    "48": "icons/icon128.png",
-    "128": "icons/icon128.png"
+    "16": "assets/icons/icon128.png",
+    "32": "assets/icons/icon128.png",
+    "48": "assets/icons/icon128.png",
+    "128":"assets/icons/icon128.png"
   }
 }
