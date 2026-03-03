@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
 
-
 :root {
   --bg-color: #f8fafc;
   --primary-blue: #3b82f6;
@@ -76,11 +75,76 @@ header {
   letter-spacing: -0.5px;
 }
 
+/* Input Section*/
+.input-group {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 15px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.task-input {
+  width: 100%;
+  min-height: 54px;
+  max-height: 200px;
+  padding: 14px 50px 14px 20px;
+  border-radius: 14px;
+  border: 2px solid #e2e8f0;
+  background-color: white;
+  font-size: 16px;
+  color: var(--text-main);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  resize: none;
+  overflow-y: hidden;
+  display: block;
+  line-height: 1.5;
+}
+
+.task-input:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.input-icon-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 11px;
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease , background 0.2s ease;
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.input-icon-btn:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
+.task-input::placeholder {
+  color: #94a3b8;
+}
+
 /* Navigation Buttons */
 .nav-controls {
   display: flex;
   gap: 15px;
-  margin-bottom: 40px;
+  /* margin-bottom: 20px; */
 }
 
 .btn {
@@ -176,7 +240,7 @@ header {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.btn-delete {
+.btn-action {
   background: none;
   border: none;
   color: inherit;
@@ -186,6 +250,14 @@ header {
   opacity: 0.7;
   padding: 5px 10px;
   border-radius: 6px;
+}
+
+.btn-delete{
+  cursor: pointer;
+}
+
+.btn-edit {
+   cursor:not-allowed; /* I dont know when will i impliment it */
 }
 
 .btn-delete:hover {
@@ -210,11 +282,4 @@ header {
   border: 2px solid var(--normal-border);
   background-color: var(--normal-bg);
   color: var(--normal-text);
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .task-container {
-    grid-template-columns: 1fr;
-  }
 }

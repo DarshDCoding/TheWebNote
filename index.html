@@ -2,21 +2,26 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
-
+    <!-- <script src="content.js" defer></script> -->
 </head>
 <body>
-    <!-- <h1>The Web Note</h1>
-    <button>Add</button>
-    <button>Dashboard</button> -->
-
      <header>
         <div class="logo-container">
             <img src="assets/icons/icon128.png" alt="logo" height="40px" width="40px">
             <h1 class="app-name">The Web Note</h1>
         </div>
 
+        <div class="input-group">
+            <textarea 
+                class="task-input" 
+                placeholder="What needs to be done?" 
+                rows="1"
+                oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+            <button class="input-icon-btn" title="Quick Add"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/></svg></button>
+        </div>
+
         <div class="nav-controls">
-            <button class="btn btn-add">
+            <button class="btn btn-add" id="addTask">
                 <span>+</span> Add Task
             </button>
             <button class="btn btn-dashboard">
@@ -32,7 +37,8 @@
             <div class="task-content">
                 <p class="task-desc">Submit the final draft to the executive board by EOD tomorrow. This is high priority.</p>
                 <div class="task-footer">
-                    <button class="btn-delete">Delete</button>
+                    <button class="btn-action btn-edit">Edit</button>
+                    <button class="btn-action btn-delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -41,9 +47,10 @@
         <div class="task-card priority-medium">
             <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Meeting+Notes'">
             <div class="task-content">
-                <p class="task-desc">Prepare the Miro board for the UI/UX session scheduled for Wednesday afternoon.</p>
+                <!-- <p class="task-desc">Prepare the Miro board for the UI/UX session scheduled for Wednesday afternoon.</p> -->
                 <div class="task-footer">
-                    <button class="btn-delete">Delete</button>
+                    <button class="btn-action btn-edit">Edit</button>
+                    <button class="btn-action btn-delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -54,7 +61,8 @@
             <div class="task-content">
                 <p class="task-desc">Book a slot for the Friday evening restorative yoga class at the local studio.</p>
                 <div class="task-footer">
-                    <button class="btn-delete">Delete</button>
+                    <button class="btn-action btn-edit">Edit</button>
+                    <button class="btn-action btn-delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -65,10 +73,12 @@
             <div class="task-content">
                 <p class="task-desc">Pick up almond milk, fresh berries, and whole-grain bread on the way home.</p>
                 <div class="task-footer">
-                    <button class="btn-delete">Delete</button>
+                    <button class="btn-action btn-edit">Edit</button>
+                    <button class="btn-action btn-delete">Delete</button>
                 </div>
             </div>
         </div>
     </main>
+  
 </body>
 </html>
