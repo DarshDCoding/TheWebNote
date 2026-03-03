@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
-    <!-- <script src="content.js" defer></script> -->
+    <script src="content.js" defer></script>
 </head>
 <body>
      <header>
@@ -15,16 +15,15 @@
             <textarea 
                 class="task-input" 
                 placeholder="What needs to be done?" 
-                rows="1"
-                oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
-            <button class="input-icon-btn" title="Quick Add"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/></svg></button>
+                rows="1" id="taskInputField" autofocus></textarea>
+            <button class="input-icon-btn" title="Quick Add"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#3b82f6"><path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/></svg></button>
         </div>
 
         <div class="nav-controls">
             <button class="btn btn-add" id="addTask">
                 <span>+</span> Add Task
             </button>
-            <button class="btn btn-dashboard">
+            <button class="btn btn-dashboard" id="dashboardBtn">
              Dashboard
             </button>
         </div>
