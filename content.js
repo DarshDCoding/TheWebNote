@@ -3,6 +3,12 @@ const taskInputField = document.getElementById("taskInputField");
 const addTaskbtn = document.getElementById ("addTask");
 const darshboardBtn = document.getElementById ("dashboardBtn");
 
+//getting current date
+function getCurrentDateTime() {
+  const now = new Date();
+  return now.toLocaleString(); 
+}
+
 //taking input
 const InputProcessing = () =>{
     let trimmedValue;
@@ -10,33 +16,34 @@ const InputProcessing = () =>{
     let notePriority;
 
     if (taskInputField.value){
-
         trimmedValue = String(taskInputField.value).trim()
         noteValue = trimmedValue.slice(0,-4)
         notePriority = trimmedValue.slice(-4, )
-        // console.log(noteValue)
-        // console.log (notePriority)
         taskInputField.value =""
     }
+
+    let formatedNote = {value:noteValue, createdAt: getCurrentDateTime(), status:"pending"}
     
     if (notePriority === "#imp"){
-        return {value:noteValue, priority:"important", status:"pending"};
+        formatedNote.priority = "important"
     }else if (notePriority === "#neu"){
-        return {value: noteValue, priority:"neutral", status:"pending"};
+        formatedNote.priority = "neutral"
     }else{
-        return {value: noteValue, priority:"normal", status:"pending"};
+        formatedNote.priority = "normal"
     }
+
+    return formatedNote
 }
 
-//for keyboard Enter
+//Submit for keyboard Enter
 taskInputField.addEventListener("keypress", e => {
     if (e.key == "Enter" && !e.shiftKey){
         e.preventDefault()
-        console.log(InputProcessing().priority)
+        console.log(InputProcessing())
     }
 });
 
-//for mouse
+//Submit for mouse
 addTaskbtn.addEventListener("click", ()=>InputProcessing())
 
 
