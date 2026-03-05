@@ -28,6 +28,25 @@ function getCurrentDateTime() {
   return `${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${ampm}`;
 }
 
+// to get the url of active tab (hostname only)
+let activeTabUrl = "";
+
+const getActiveTabUrl = (callback) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const activeTab = tabs[0];
+    const activeTabUrl = activeTab.url;
+    callback(activeTabUrl);
+  });
+};
+
+getActiveTabUrl((url) => {
+  activeTabUrl = url;
+});
+
+const urlExtract = (url) => {
+  const urlArray = url.split("/");
+  return urlArray[2];
+};
 
 
 //taking input
@@ -78,14 +97,7 @@ taskInputField.addEventListener("keypress", e => {
 });
 
 //Submit for mouse
-addTaskbtn.addEventListener("click", ()=>InputProcessing())
-
-
-// to get the url of active tab (hostname only)
-async function getCurrentTabUrl() {
-  let queryOptions = { active: true, currentWindow: true };
-  let [tab] = await chrome.tabs.query(queryOptions); 
-
-  let url = new URL(tab.url)
-  return url.hostname;
+addTaskbtn.addEventListener("click", ()=>{
+    InputProcessing()
 }
+)
