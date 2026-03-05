@@ -2,12 +2,33 @@
 const taskInputField = document.getElementById("taskInputField");
 const addTaskbtn = document.getElementById ("addTask");
 const darshboardBtn = document.getElementById ("dashboardBtn");
+const inputImage = document.getElementById("inputImage");
+const previewImage = document.getElementById("previewImage");
+const previewImgContainer = document.getElementById("previewImgContainer");
+const imageInputIcon = document.getElementById("imageInputIcon");
 
 //getting current date
 function getCurrentDateTime() {
   const now = new Date();
-  return now.toLocaleString(); 
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 becomes 12
+  hours = String(hours).padStart(2, "0");
+
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${ampm}`;
 }
+
+
 
 //taking input
 const InputProcessing = () =>{
@@ -22,18 +43,31 @@ const InputProcessing = () =>{
         taskInputField.value =""
     }
 
-    let formatedNote = {value:noteValue, createdAt: getCurrentDateTime(), status:"pending"}
+    let formatedNote = {note:noteValue, createdAt: getCurrentDateTime(), status:"pending"}
     
     if (notePriority === "#imp"){
         formatedNote.priority = "important"
     }else if (notePriority === "#neu"){
         formatedNote.priority = "neutral"
     }else{
+        formatedNote.note = trimmedValue
         formatedNote.priority = "normal"
     }
 
     return formatedNote
 }
+
+//preview the Image
+inputImage.addEventListener('change',()=>{
+    const file = inputImage.files[0];
+
+    if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        previewImage.src = imageUrl;
+        previewImgContainer.style.setProperty('--preview-bg', `url(${imageUrl})`);
+        previewImgContainer.style.display= "flex";
+    }
+});
 
 //Submit for keyboard Enter
 taskInputField.addEventListener("keypress", e => {

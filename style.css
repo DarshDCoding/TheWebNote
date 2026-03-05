@@ -136,12 +136,54 @@ header {
   transform: scale(1.05);
 }
 
-.input-icon-btn svg:hover{
-  fill: var(--primary-white);
-}
-
 .task-input::placeholder {
   color: #94a3b8;
+}
+
+input[type="file"] {
+    display: none; /* Hides the default button */
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 12px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+#previewImgContainer{
+  --preview-bg: none;
+  position: relative;
+  margin-block:6px 24px ;
+  height: 300px;
+  width: 300px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+#previewImgContainer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: var(--preview-bg);
+  background-size:contain;
+  background-position: center;
+  filter: blur(5px) brightness(0.7);
+  z-index: -1;
+}
+
+#previewImage{
+  position: relative;
+  z-index: 2;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 /* Navigation Buttons */
@@ -253,6 +295,11 @@ header {
   opacity: 0.7;
   padding: 5px 10px;
   border-radius: 6px;
+}
+
+.date{
+  justify-self: flex-start;
+
 }
 
 .btn-delete{
