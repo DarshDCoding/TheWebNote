@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
-    <script src="content.js" defer></script>
+    <!-- <script src="/utils/date.js"></script>
+    <script src="/utils/urls.js"></script> -->
+    <script type="module" src="content.js" defer></script>
 </head>
 <body>
      <header>
@@ -37,57 +39,28 @@
         </div>
     </header>
 
-    <main class="task-container">
-        <!-- Important Task -->
-        <div class="task-card priority-important">
-            <!-- <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Critical+Update'"> -->
-            <div class="task-content">
-                <p class="task-desc">Submit the final draft to the executive board by EOD tomorrow. This is high priority.</p>
-                <div class="task-footer">
-                    <p class="btn-action date">04-03-2026 02:59:38 PM</p>
-                    <button class="btn-action btn-edit">Edit</button>
-                    <button class="btn-action btn-delete">Delete</button>
-                </div>
-            </div>
-        </div>
+    <main class="task-container" id="task-container">
+        <div class="placeholder-container">
+            <svg width="260" height="200" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="130" cy="80" r="50" fill="#f2f4f7"/>
 
-        <!-- Medium Task -->
-        <div class="task-card priority-medium">
-            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Meeting+Notes'">
-            <div class="task-content">
-                <!-- <p class="task-desc">Prepare the Miro board for the UI/UX session scheduled for Wednesday afternoon.</p> -->
-                <div class="task-footer">
-                    <p class="btn-action">04-03-2026 02:59:38 PM</p>
-                    <button class="btn-action btn-edit">Edit</button>
-                    <button class="btn-action btn-delete">Delete</button>
-                </div>
-            </div>
-        </div>
+  <!-- Note icon -->
+  <rect x="105" y="50" width="50" height="60" rx="6" fill="#ffffff" stroke="#cfd6dd" stroke-width="2"/>
 
-        <!-- Normal Task -->
-        <div class="task-card priority-normal">
-            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Fitness+Goals'">
-            <div class="task-content">
-                <p class="task-desc">Book a slot for the Friday evening restorative yoga class at the local studio.</p>
-                <div class="task-footer">
-                    <p class="btn-action date">04-03-2026 02:59:38 PM</p>
-                    <button class="btn-action btn-edit">Edit</button>
-                    <button class="btn-action btn-delete">Delete</button>
-                </div>
-            </div>
-        </div>
+  <!-- Note lines -->
+  <line x1="115" y1="65" x2="145" y2="65" stroke="#d0d6dc" stroke-width="2"/>
+  <line x1="115" y1="75" x2="145" y2="75" stroke="#d0d6dc" stroke-width="2"/>
+  <line x1="115" y1="85" x2="135" y2="85" stroke="#d0d6dc" stroke-width="2"/>
 
-        <!-- Another Normal Task -->
-        <div class="task-card priority-normal">
-            <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=500&q=80" alt="Task Image" class="task-image" onerror="this.src='https://via.placeholder.com/500x160?text=Grocery+List'">
-            <div class="task-content">
-                <p class="task-desc">Pick up almond milk, fresh berries, and whole-grain bread on the way home.</p>
-                <div class="task-footer">
-                    <p class="btn-action">04-03-2026 02:59:38 PM</p>
-                    <button class="btn-action btn-edit">Edit</button>
-                    <button class="btn-action btn-delete">Delete</button>
-                </div>
-            </div>
+  <!-- Magnifying glass -->
+  <circle cx="155" cy="95" r="12" fill="none" stroke="#b8c0c8" stroke-width="3"/>
+  <line x1="163" y1="103" x2="175" y2="115" stroke="#b8c0c8" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Text -->
+  <text x="130" y="150" text-anchor="middle" class="title">Nothing to show</text>
+  <text x="130" y="170" text-anchor="middle" class="subtitle">No notes for this website yet.</text>
+</svg>
         </div>
     </main>
   

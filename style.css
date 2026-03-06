@@ -158,13 +158,15 @@ input[type="file"] {
   --preview-bg: none;
   position: relative;
   margin-block:6px 24px ;
-  height: 300px;
+  height: 0px;
   width: 300px;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   border-radius: 20px;
+
+  transition: height 0.25s ease-in-out;
 }
 
 #previewImgContainer::before {
@@ -333,3 +335,15 @@ input[type="file"] {
   background-color: var(--normal-bg);
   color: var(--normal-text);
 }
+
+
+.placeholder-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/*Placeholder svg styles*/
+.title { font: 600 16px sans-serif; fill: #555; }
+.subtitle { font: 13px sans-serif; fill: #888; }
