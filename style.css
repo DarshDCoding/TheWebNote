@@ -159,9 +159,7 @@ input[type="file"] {
   position: relative;
   margin-block:6px 24px ;
   height: 0px;
-  height: 0px;
   width: 300px;
-  display: flex;
   display: flex;
   justify-content: center;
   align-items: center;
