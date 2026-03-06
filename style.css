@@ -158,13 +158,14 @@ input[type="file"] {
   --preview-bg: none;
   position: relative;
   margin-block:6px 24px ;
-  height: 300px;
+  height: 0px;
   width: 300px;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   border-radius: 20px;
+  transition: height 0.3s ease-in-out ;
 }
 
 #previewImgContainer::before {

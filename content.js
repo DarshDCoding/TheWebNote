@@ -84,7 +84,7 @@ inputImage.addEventListener('change',()=>{
         const imageUrl = URL.createObjectURL(file);
         previewImage.src = imageUrl;
         previewImgContainer.style.setProperty('--preview-bg', `url(${imageUrl})`);
-        previewImgContainer.style.display= "flex";
+        previewImgContainer.style.height= "300px";
     }
 });
 
@@ -99,6 +99,8 @@ taskInputField.addEventListener("keypress", e => {
 //Submit for mouse
 addTaskbtn.addEventListener("click", ()=>{
     InputProcessing()
+    previewImage.src = ""
+    previewImgContainer.style.height="0px";
 }
 )
 
