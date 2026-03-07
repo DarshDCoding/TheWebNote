@@ -1,0 +1,59 @@
+<svg width="340" height="240" viewBox="0 0 340 240" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .drop-zone{
+      fill:#f6f8fb;
+      stroke:#cfd6e0;
+      stroke-width:2;
+      stroke-dasharray:10 7;
+      rx:14;
+    }
+
+    .image-box{
+      fill:#ffffff;
+      stroke:#d6dde6;
+      stroke-width:2;
+      rx:10;
+    }
+
+    .title{
+      font:600 16px system-ui, sans-serif;
+      fill:#444;
+      text-anchor:middle;
+    }
+
+    .subtitle{
+      font:13px system-ui, sans-serif;
+      fill:#7a7a7a;
+      text-anchor:middle;
+    }
+
+    .icon{
+      stroke:#6b7280;
+      stroke-width:2.5;
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+  </style>
+
+  <!-- Drag Drop Zone -->
+  <rect x="20" y="20" width="300" height="160" class="drop-zone"/>
+
+  <!-- Image Frame -->
+  <rect x="130" y="60" width="80" height="60" class="image-box"/>
+
+  <!-- Sun -->
+  <circle cx="150" cy="78" r="4" fill="#7c8796"/>
+
+  <!-- Mountains (fixed alignment) -->
+  <path d="M135 108 L155 88 L170 102 L195 82 L205 108 Z" fill="#c4ccd8"/>
+
+  <!-- Upload Arrow -->
+  <path d="M170 45 L170 60" class="icon"/>
+  <path d="M162 53 L170 45 L178 53" class="icon"/>
+
+  <!-- Text -->
+  <text x="170" y="200" class="title">Drag your image here</text>
+  <text x="170" y="220" class="subtitle">Attach images to your web notes</text>
+
+</svg>
