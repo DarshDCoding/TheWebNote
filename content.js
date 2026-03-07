@@ -2,12 +2,12 @@ import { activeTabUrl, getActiveTabUrl, urlExtract } from "./utils/urls.js";
 import { getCurrentDateTime } from "./utils/date.js";
 import { dummyData } from "./utils/dummyData.js";
 import { RenderNotes } from "./utils/render.js";
+import {showImagePreview, resetImagePreview } from "./utils/helper.js";
+
 //elements
 const taskInputField = document.getElementById("taskInputField");
 const addTaskbtn = document.getElementById("addTask");
 const inputImage = document.getElementById("inputImage");
-const previewImage = document.getElementById("previewImage");
-const previewImgContainer = document.getElementById("previewImgContainer");
 
 RenderNotes(dummyData)
 
@@ -20,7 +20,7 @@ const InputProcessing = () => {
   if (taskInputField.value) {
     trimmedValue = String(taskInputField.value).trim();
     noteValue = trimmedValue.slice(0, -4);
-    notePriority = trimmedValue.slice(-4);
+    notePriority = trimmedValue.slice(-4).toUpperCase();
     taskInputField.value = "";
   }
 
@@ -30,9 +30,9 @@ const InputProcessing = () => {
     status: "pending",
   };
 
-  if (notePriority === "#imp") {
+  if (notePriority === "#IMP") {
     formatedNote.priority = "important";
-  } else if (notePriority === "#neu") {
+  } else if (notePriority === "#MID") {
     formatedNote.priority = "medium";
   } else {
     formatedNote.note = trimmedValue;
@@ -43,22 +43,19 @@ const InputProcessing = () => {
 };
 
 //preview the Image
+
 inputImage.addEventListener("change", (event) => {
+
   const file = event.target.files[0];
 
-  console.log(file)
-
-
   if (file) {
-    const imageUrl = URL.createObjectURL(file);
-    previewImage.src = imageUrl;
-    previewImgContainer.style.setProperty("--preview-bg", `url(${imageUrl})`);
-    previewImgContainer.style.height = "300px";
+    showImagePreview(file);
   }
 });
 
+
 //Submit for keyboard Enter
-taskInputField.addEventListener("keypress", (e) => {
+taskInputField.addEventListener("keydown", (e) => {
   if (e.key == "Enter" && !e.shiftKey) {
     e.preventDefault();
     console.log(InputProcessing());
@@ -68,7 +65,5 @@ taskInputField.addEventListener("keypress", (e) => {
 //Submit for mouse
 addTaskbtn.addEventListener("click", () => {
   InputProcessing();
-  previewImage.src = "";
-  previewImgContainer.style.height = "0px";
+  resetImagePreview();
 });
-
