@@ -1,0 +1,26 @@
+<svg width="260" height="200" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+
+<style>
+    .title { font: 600 16px sans-serif; fill: #555; }
+    .subtitle { font: 13px sans-serif; fill: #888; }
+</style>
+
+  <!-- Background circle -->
+  <circle cx="130" cy="80" r="50" fill="#f2f4f7"/>
+
+  <!-- Note icon -->
+  <rect x="105" y="50" width="50" height="60" rx="6" fill="#ffffff" stroke="#cfd6dd" stroke-width="2"/>
+
+  <!-- Note lines -->
+  <line x1="115" y1="65" x2="145" y2="65" stroke="#d0d6dc" stroke-width="2"/>
+  <line x1="115" y1="75" x2="145" y2="75" stroke="#d0d6dc" stroke-width="2"/>
+  <line x1="115" y1="85" x2="135" y2="85" stroke="#d0d6dc" stroke-width="2"/>
+
+  <!-- Magnifying glass -->
+  <circle cx="155" cy="95" r="12" fill="none" stroke="#b8c0c8" stroke-width="3"/>
+  <line x1="163" y1="103" x2="175" y2="115" stroke="#b8c0c8" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Text -->
+  <text x="130" y="150" text-anchor="middle" class="title">Nothing to show</text>
+  <text x="130" y="170" text-anchor="middle" class="subtitle">No notes for this website yet.</text>
+</svg>

@@ -14,11 +14,42 @@ const renderElement = (note) => `
 `;
 
 // rendering all elements.
-export const RenderNotes = (data) =>{
-  let renderNotes = Object.values(data)
-  .flat()
-  .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
-  .map(renderElement)
-  .join("")
-  document.getElementById("task-container").innerHTML = renderNotes;
-}
+// export const RenderNotes = (data) =>{
+
+//     const importantHTML = data.important
+//     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+//     .map(renderElement)
+//     .join("");
+
+//   const mediumHTML = data.medium
+//     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+//     .map(renderElement)
+//     .join("");
+
+//   const normalHTML = data.normal
+//     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+//     .map(renderElement)
+//     .join("");
+
+//   document.getElementById("task-container").innerHTML =
+//     importantHTML + mediumHTML + normalHTML;
+// }
+
+
+//version 2.0
+
+export const RenderNotes = (data) => {
+
+  const order = ["important", "medium", "normal"];
+
+  const html = order
+    .map(priority =>
+      [...data[priority]] //not mutating the actual data.
+        .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+        .map(renderElement)
+        .join("")
+    )
+    .join("");
+
+  document.getElementById("task-container").innerHTML = html;
+};

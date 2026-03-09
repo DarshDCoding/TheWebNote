@@ -343,7 +343,3 @@ input[type="file"] {
   align-items: center;
   overflow: hidden;
 }
-
-/*Placeholder svg styles*/
-.title { font: 600 16px sans-serif; fill: #555; }
-.subtitle { font: 13px sans-serif; fill: #888; }
