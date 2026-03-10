@@ -38,7 +38,7 @@ const renderElement = (note) => `
 
 //version 2.0
 
-export const RenderNotes = (data) => {
+export const RenderNotes = (data= {important: [], medium: [], normal:[]}) => {
 
   const order = ["important", "medium", "normal"];
 
