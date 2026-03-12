@@ -13,29 +13,6 @@ const renderElement = (note) => `
     </div>
 `;
 
-// rendering all elements.
-// export const RenderNotes = (data) =>{
-
-//     const importantHTML = data.important
-//     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
-//     .map(renderElement)
-//     .join("");
-
-//   const mediumHTML = data.medium
-//     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
-//     .map(renderElement)
-//     .join("");
-
-//   const normalHTML = data.normal
-//     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
-//     .map(renderElement)
-//     .join("");
-
-//   document.getElementById("task-container").innerHTML =
-//     importantHTML + mediumHTML + normalHTML;
-// }
-
-
 //version 2.0
 
 export const RenderNotes = (data= {important: [], medium: [], normal:[]}) => {

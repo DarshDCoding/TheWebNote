@@ -118,31 +118,25 @@ function siteHasNotes(url) {
  
 // MESSAGE ROUTER
  
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
-  if (request.action === "ADD_NOTE") {
+  const actions = {
+    ADD_NOTE: () => addNote(request.url, request.note),
+    GET_NOTES: () => getSiteNotes(request.url),
+    CHECK_SITE: () => siteHasNotes(request.url)
+  };
 
-    addNote(request.url, request.note)
-      .then(data => sendResponse(data));
+  const action = actions[request.action];
 
+  if (!action) {
+    sendResponse({ error: "Unknown action" });
+    return;
   }
 
-  if (request.action === "GET_NOTES") {
-    console.log ("GET_NOTES request:", request.url);
-    getSiteNotes(request.url)
-      .then(data => sendResponse(data));
+  action()
+    .then(sendResponse)
+    .catch(err => sendResponse({ error: err.message }));
 
-      return true;
+  return true; // keep message channel open for async response
 
-  }
-
-  if (request.action === "CHECK_SITE") {
-
-    siteHasNotes(request.url)
-      .then(result => sendResponse(result));
-
-  }
-
-  return true; // required for async response
 });
