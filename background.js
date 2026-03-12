@@ -129,9 +129,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === "GET_NOTES") {
-
+    console.log ("GET_NOTES request:", request.url);
     getSiteNotes(request.url)
       .then(data => sendResponse(data));
+
+      return true;
 
   }
 

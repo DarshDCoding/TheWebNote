@@ -1,12 +1,9 @@
 import { activeTabUrl, urlExtract } from "./utils/urls.js";
 import { getCurrentDateTime } from "./utils/date.js";
 import { RenderNotes } from "./utils/render.js";
-import {
-  showImagePreview,
-  resetImagePreview,
-  getCurrentImageURL,
-} from "./utils/imageHandler.js";
+import { showImagePreview, resetImagePreview, getCurrentImageURL} from "./utils/imageHandler.js";
 import { InputProcessing } from "./utils/inputProcess.js";
+
 
 //elements
 const addTaskbtn = document.getElementById("addTask");
@@ -57,6 +54,28 @@ const handeSubmit = () => {
   // RenderNotes(data);
 };
 
+
+function loadNotes() {
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+
+    const site = urlExtract(tabs[0].url);
+
+    chrome.runtime.sendMessage({
+      action: "GET_NOTES",
+      url: site
+    }, (response) => {
+
+      if (!response) return;
+
+      data = response;
+      RenderNotes(data);
+
+    });
+
+  });
+
+}
   
   //Submit for keyboard Enter
   taskInputField.addEventListener("keydown", (e) => {
@@ -68,3 +87,5 @@ const handeSubmit = () => {
   
   //Submit for mouse
   addTaskbtn.addEventListener("click", handeSubmit);
+
+  loadNotes();

@@ -42,6 +42,23 @@ export const RenderNotes = (data= {important: [], medium: [], normal:[]}) => {
 
   const order = ["important", "medium", "normal"];
 
+  const notes = order.flatMap(priority => data[priority]);
+
+
+  //adding placeholder for empty list.
+  if (notes.length === 0){
+    const taskContainer = document.getElementById("task-container")
+    taskContainer.style.display= "flex";
+    taskContainer.style.justifyContent= "center";
+    taskContainer.style.alignItems = "center";
+    taskContainer.style.flexDirection= "column";
+    
+    taskContainer.innerHTML =
+    `<img src="/assets/svgs/nothingToShow.svg" alt="nothing to show image" id="placeholderImg">`;
+    return;
+  }
+
+
   const html = order
     .map(priority =>
       [...data[priority]] //not mutating the actual data.

@@ -6,18 +6,20 @@ let currentImageURL = null;
 const showImagePreview = (file) => {
   if (!file) return;
 
-  if (currentImageURL) {
-    URL.revokeObjectURL(currentImageURL);
-  }
+  const reader = new FileReader();
 
-  currentImageURL = URL.createObjectURL(file);
+  reader.onload = () => {
+    currentImageURL = reader.result;
 
-  previewImage.src = currentImageURL;
-  previewImgContainer.style.setProperty(
-    "--preview-bg",
-    `url(${currentImageURL})`,
-  );
-  previewImgContainer.style.height = "300px";
+    previewImage.src = currentImageURL;
+    previewImgContainer.style.setProperty(
+      "--preview-bg",
+      `url(${currentImageURL})`,
+    );
+    previewImgContainer.style.height = "300px";
+  };
+
+  reader.readAsDataURL(file); //converts file to base64
 };
 
 const resetImagePreview = () => {

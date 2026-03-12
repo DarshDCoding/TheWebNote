@@ -250,7 +250,7 @@ input[type="file"] {
 .task-card {
   border-radius: 16px;
   overflow: hidden;
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   position: relative;
   transition: transform 0.2s ease;
