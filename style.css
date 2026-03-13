@@ -305,7 +305,7 @@ input[type="file"] {
 }
 
 .btn-delete{
-  cursor: not-allowed; /*kabhi toh karunga hi.*/
+  cursor: pointer;
 }
 
 .btn-edit {

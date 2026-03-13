@@ -1,9 +1,12 @@
 import { activeTabUrl, urlExtract } from "./utils/urls.js";
 import { getCurrentDateTime } from "./utils/date.js";
 import { RenderNotes } from "./utils/render.js";
-import { showImagePreview, resetImagePreview, getCurrentImageURL} from "./utils/imageHandler.js";
+import {
+  showImagePreview,
+  resetImagePreview,
+  getCurrentImageURL,
+} from "./utils/imageHandler.js";
 import { InputProcessing } from "./utils/inputProcess.js";
-
 
 //elements
 const addTaskbtn = document.getElementById("addTask");
@@ -40,7 +43,8 @@ const handeSubmit = () => {
       action: "ADD_NOTE",
       url: urlExtract(activeTabUrl),
       note: inputData,
-    }, (response) => {
+    },
+    (response) => {
       if (!response) {
         console.error("No response from background");
         return;
@@ -54,38 +58,56 @@ const handeSubmit = () => {
   // RenderNotes(data);
 };
 
-
 function loadNotes() {
-
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-
     const site = urlExtract(tabs[0].url);
 
-    chrome.runtime.sendMessage({
-      action: "GET_NOTES",
-      url: site
-    }, (response) => {
+    chrome.runtime.sendMessage(
+      {
+        action: "GET_NOTES",
+        url: site,
+      },
+      (response) => {
+        if (!response) return;
 
-      if (!response) return;
-
-      data = response;
-      RenderNotes(data);
-
-    });
-
+        data = response;
+        RenderNotes(data);
+      },
+    );
   });
-
 }
-  
-  //Submit for keyboard Enter
-  taskInputField.addEventListener("keydown", (e) => {
-    if (e.key == "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handeSubmit();
-    }
-  });
-  
-  //Submit for mouse
-  addTaskbtn.addEventListener("click", handeSubmit);
 
-  loadNotes();
+//Submit for keyboard Enter
+taskInputField.addEventListener("keydown", (e) => {
+  if (e.key == "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    handeSubmit();
+  }
+});
+
+//Submit for mouse
+addTaskbtn.addEventListener("click", handeSubmit);
+
+
+//for handeling delete
+
+document.addEventListener("click", (e) => {
+  const deleteBtn = e.target.closest(".btn-delete");
+
+  if (!deleteBtn) return;
+
+  const noteId = deleteBtn.dataset.id;
+
+  chrome.runtime.sendMessage(
+    {
+      action: "DELETE_NOTE",
+      url: urlExtract(activeTabUrl),
+      id: noteId,
+    },
+    (updatedData) => {
+      RenderNotes(updatedData);
+    },
+  );
+});
+
+loadNotes();

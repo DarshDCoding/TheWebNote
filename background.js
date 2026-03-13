@@ -78,6 +78,46 @@ function addNote(url, note) {
   });
 }
 
+// DELETE NOTE
+
+function deleteNote (url, noteId) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+
+      const siteData = await getSiteNotes(url);
+
+      const priorities = ["important", "medium", "normal"];
+
+      for (const priority of priorities) {
+
+        const index = siteData[priority].findIndex(
+          note => note.id === noteId
+        );
+
+        if (index !== -1){
+
+          siteData[priority].splice(index, 1);
+
+          const tx = db.transaction("notes", "readwrite");
+          const store = tx.objectStore("notes");
+
+          const req = store.put(siteData, url);
+
+          req.onsuccess = () => resolve(siteData);
+          req.onerror = () => reject(req.error);
+
+          return;
+        }
+      }
+      resolve (siteData);
+
+    } catch (err){
+      reject(err)
+    }
+  })
+}
+
 
 
  
@@ -122,6 +162,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   const actions = {
     ADD_NOTE: () => addNote(request.url, request.note),
+    DELETE_NOTE: () => deleteNote(request.url, request.id),
     GET_NOTES: () => getSiteNotes(request.url),
     CHECK_SITE: () => siteHasNotes(request.url)
   };
