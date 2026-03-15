@@ -1,12 +1,13 @@
 import { activeTabUrl, urlExtract } from "./utils/urls.js";
 import { getCurrentDateTime } from "./utils/date.js";
-import { RenderNotes, RenderNothingToShow, RenderLookingToShow } from "./utils/render.js";
-import {
-  showImagePreview,
-  resetImagePreview,
-  getCurrentImageURL,
-} from "./utils/imageHandler.js";
 import { InputProcessing } from "./utils/inputProcess.js";
+
+import { showImagePreview, resetImagePreview, getCurrentImageURL } from "./utils/imageHandler.js";
+import { deleteNote } from "./utils/noteService.js";
+
+import { RenderNotes, RenderLookingToShow, RenderNothingToShow} from "./utils/render.js";
+
+import { addGlobalEventListner } from "./utils/events.js";
 
 //elements
 const addTaskbtn = document.getElementById("addTask");
@@ -33,8 +34,6 @@ const handeSubmit = () => {
 
   if (!inputData) return;
 
-  // data[inputData.priority].push(inputData);
-
   resetImagePreview();
 
   chrome.runtime.sendMessage(
@@ -53,13 +52,11 @@ const handeSubmit = () => {
       RenderNotes(data);
     },
   );
-
-  // RenderNotes(data);
 };
 
 function loadNotes() {
   RenderLookingToShow();
-  
+
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const site = urlExtract(tabs[0].url);
 
@@ -89,36 +86,5 @@ taskInputField.addEventListener("keydown", (e) => {
 //Submit for mouse
 addTaskbtn.addEventListener("click", handeSubmit);
 
-
-//for handeling delete
-
-document.addEventListener("click", (e) => {
-  const deleteBtn = e.target.closest(".btn-delete");
-
-  if (!deleteBtn) return;
-
-  const noteId = deleteBtn.dataset.id;
-  const taskCard = deleteBtn.closest(".task-card");
-
-  taskCard.classList.add ("task-fade-out");
-
-  taskCard.addEventListener("transitionend", ()=>{
-    //remove form DOM 
-    taskCard.remove()
-
-    //to check if 0 notes are present.
-    const remainingNotes = document.querySelectorAll(".task-card");
-    remainingNotes.length === 0 && RenderNothingToShow();
-
-    //update DB
-    chrome.runtime.sendMessage(
-      {
-        action: "DELETE_NOTE",
-        url: urlExtract(activeTabUrl),
-        id: noteId,
-      });
-  }, {once: true})
-
-});
-
+addGlobalEventListner("click", ".btn-delete", e => deleteNote(e, urlExtract(activeTabUrl), RenderNothingToShow));
 loadNotes();
