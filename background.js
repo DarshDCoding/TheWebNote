@@ -78,7 +78,7 @@ function addNote(url, note) {
   });
 }
 
-// DELETE NOTE
+// DELETE NOTE (O(n)) will think in future for o
 
 function deleteNote (url, noteId) {
   return new Promise(async (resolve, reject) => {

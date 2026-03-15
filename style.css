@@ -246,12 +246,16 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.2s ease;
+  transition:opacity 0.25s, transform 0.25s ease ;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .task-card:hover {
   transform: scale(1.02);
+}
+
+.task-fade-out{
+  opacity: 0;
 }
 
 .task-image {

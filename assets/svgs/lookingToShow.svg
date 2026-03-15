@@ -1,0 +1,59 @@
+<svg width="340" height="220" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .circle-bg{
+      fill:#f6f8fb;
+    }
+
+    .note{
+      fill:#ffffff;
+      stroke:#d6dde6;
+      stroke-width:2;
+      rx:8;
+    }
+
+    .line{
+      stroke:#dfe5ee;
+      stroke-width:2;
+      stroke-linecap:round;
+    }
+
+    .glass{
+      stroke:#6b7280;
+      stroke-width:3;
+      fill:none;
+      stroke-linecap:round;
+    }
+
+    .title{
+      font:600 16px system-ui, sans-serif;
+      fill:#444;
+      text-anchor:middle;
+    }
+
+    .subtitle{
+      font:13px system-ui, sans-serif;
+      fill:#7a7a7a;
+      text-anchor:middle;
+    }
+  </style>
+
+  <!-- background circle -->
+  <circle cx="170" cy="90" r="60" class="circle-bg"/>
+
+  <!-- note sheet -->
+  <rect x="135" y="55" width="70" height="60" class="note"/>
+
+  <!-- note lines -->
+  <line x1="145" y1="72" x2="195" y2="72" class="line"/>
+  <line x1="145" y1="85" x2="195" y2="85" class="line"/>
+  <line x1="145" y1="98" x2="180" y2="98" class="line"/>
+
+  <!-- magnifying glass -->
+  <circle cx="195" cy="100" r="12" class="glass"/>
+  <line x1="204" y1="109" x2="216" y2="121" class="glass"/>
+
+  <!-- text -->
+  <text x="170" y="180" class="title">Checking for notes</text>
+  <text x="170" y="200" class="subtitle">Looking for saved notes on this site...</text>
+
+</svg>

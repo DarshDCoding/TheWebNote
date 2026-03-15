@@ -1,6 +1,6 @@
 import { activeTabUrl, urlExtract } from "./utils/urls.js";
 import { getCurrentDateTime } from "./utils/date.js";
-import { RenderNotes } from "./utils/render.js";
+import { RenderNotes, RenderNothingToShow, RenderLookingToShow } from "./utils/render.js";
 import {
   showImagePreview,
   resetImagePreview,
@@ -12,7 +12,6 @@ import { InputProcessing } from "./utils/inputProcess.js";
 const addTaskbtn = document.getElementById("addTask");
 const inputImage = document.getElementById("inputImage");
 const taskInputField = document.getElementById("taskInputField");
-
 //preview the Image
 
 let data = {
@@ -59,6 +58,8 @@ const handeSubmit = () => {
 };
 
 function loadNotes() {
+  RenderLookingToShow();
+  
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const site = urlExtract(tabs[0].url);
 
@@ -97,17 +98,27 @@ document.addEventListener("click", (e) => {
   if (!deleteBtn) return;
 
   const noteId = deleteBtn.dataset.id;
+  const taskCard = deleteBtn.closest(".task-card");
 
-  chrome.runtime.sendMessage(
-    {
-      action: "DELETE_NOTE",
-      url: urlExtract(activeTabUrl),
-      id: noteId,
-    },
-    (updatedData) => {
-      RenderNotes(updatedData);
-    },
-  );
+  taskCard.classList.add ("task-fade-out");
+
+  taskCard.addEventListener("transitionend", ()=>{
+    //remove form DOM 
+    taskCard.remove()
+
+    //to check if 0 notes are present.
+    const remainingNotes = document.querySelectorAll(".task-card");
+    remainingNotes.length === 0 && RenderNothingToShow();
+
+    //update DB
+    chrome.runtime.sendMessage(
+      {
+        action: "DELETE_NOTE",
+        url: urlExtract(activeTabUrl),
+        id: noteId,
+      });
+  }, {once: true})
+
 });
 
 loadNotes();
