@@ -18,6 +18,15 @@ const renderElement = (note) => `
 export const RenderNotes = (
   data = { important: [], medium: [], normal: [] },
 ) => {
+
+  //normalizing data...
+  data = {
+    important:[],
+    medium:[],
+    normal:[],
+    ...(data || {})
+  }
+
   const order = ["important", "medium", "normal"];
 
   const notes = order.flatMap((priority) => data[priority]);
