@@ -248,6 +248,7 @@ input[type="file"] {
   position: relative;
   transition:opacity 0.25s, transform 0.25s ease ;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  min-width: 300px;
 }
 
 .task-card:hover {
@@ -286,7 +287,7 @@ input[type="file"] {
 
 .task-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content:space-between;
   padding-top: 15px;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }

@@ -6,8 +6,10 @@ const renderElement = (note) => `
             <p class="task-desc">${note.note}</p>
             <div class="task-footer">
                 <p class="btn-action date">${note.createdAt}</p>
-                <button class="btn-action btn-edit" data-id="${note.id}">Edit</button>
-                <button class="btn-action btn-delete" data-id="${note.id}">Delete</button>
+                <div class= "btn-actions">
+                  <!-- <button class="btn-action btn-edit" data-id="${note.id}">Edit</button> -->
+                  <button class="btn-action btn-delete" data-id="${note.id}">Delete</button>
+                </div>
             </div>
         </div>
     </div>
