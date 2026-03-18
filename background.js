@@ -99,10 +99,18 @@ function deleteNote (url, noteId) {
 
           siteData[priority].splice(index, 1);
 
+          // check if all arrays are empty
+          const isEmpty = 
+          !siteData.important.length &&
+          !siteData.medium.length &&
+          !siteData.normal.length;
+
           const tx = db.transaction("notes", "readwrite");
           const store = tx.objectStore("notes");
 
-          const req = store.put(siteData, url);
+          const req = isEmpty
+          ? store.delete(url)
+          : store.put(siteData, url);
 
           req.onsuccess = () => resolve(siteData);
           req.onerror = () => reject(req.error);
@@ -142,9 +150,9 @@ function siteHasNotes(url) {
       }
 
       const hasNotes =
-        data.important.length ||
-        data.medium.length ||
-        data.normal.length;
+        (data.important?.length || 0) +
+        (data.medium?.length || 0) +
+        (data.normal?.length || 0);
 
       resolve(!!hasNotes);
     };
