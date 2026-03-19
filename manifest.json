@@ -24,7 +24,8 @@
   "permissions": [
     "storage",
     "activeTab",
-    "tabs"
+    "tabs",
+    "scripting"
   ],
 
   "host_permissions": [
@@ -36,7 +37,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content-loader.js"]
+      "js": ["content.js"]
     }
   ],
 
@@ -45,5 +46,18 @@
     "32": "assets/icons/icon128.png",
     "48": "assets/icons/icon128.png",
     "128":"assets/icons/icon128.png"
+  },
+
+"web_accessible_resources": [
+  {
+    "resources": [
+      "assets/icons/*",
+      "index.html",
+      "style.css",
+      "popup.js",
+      "utils/*"
+    ],
+    "matches": ["<all_urls>"]
   }
+]
 }

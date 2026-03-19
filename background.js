@@ -161,8 +161,6 @@ function siteHasNotes(url) {
   });
 }
 
-
-
  
 // MESSAGE ROUTER
  
@@ -172,7 +170,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     ADD_NOTE: () => addNote(request.url, request.note),
     DELETE_NOTE: () => deleteNote(request.url, request.id),
     GET_NOTES: () => getSiteNotes(request.url),
-    CHECK_SITE: () => siteHasNotes(request.url)
+    CHECK_SITE: () => siteHasNotes(request.url),
   };
 
   const action = actions[request.action];
