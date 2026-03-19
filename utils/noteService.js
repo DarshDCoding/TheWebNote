@@ -15,11 +15,10 @@ export const deleteNote = (e, url, fallbackFunction) => {
       const remainingNotes = document.querySelectorAll(".task-card");
       remainingNotes.length === 0 && RenderNothingToShow;
 
-      chrome.runtime.sendMessage({
-        action: "DELETE_NOTE",
-        url: url,
-        id: noteId,
-      });
+      chrome.runtime.sendMessage(
+        { action: "DELETE_NOTE", url: url, id: noteId },
+        () => chrome.runtime.sendMessage({ action: "NOTES_UPDATED", url })
+      );
     },
     { once: true },
   );

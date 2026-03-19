@@ -161,16 +161,62 @@ function siteHasNotes(url) {
   });
 }
 
+// GET ALL SITES (dashboard)
+
+function getAllSites() {
+  return new Promise((resolve, reject) => {
+    const store = db.transaction("notes", "readonly").objectStore("notes");
+    const sites = [];
+    store.openCursor().onsuccess = (e) => {
+      const cursor = e.target.result;
+      if (cursor) {
+        sites.push({ url: cursor.key, data: cursor.value });
+        cursor.continue();
+      } else {
+        resolve(sites);
+      }
+    };
+    store.openCursor().onerror = () => reject();
+  });
+}
+
+// DELETE SITE (all notes for a url)
+
+function deleteSite(url) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction("notes", "readwrite");
+    const req = tx.objectStore("notes").delete(url);
+    req.onsuccess = () => resolve();
+    req.onerror   = () => reject(req.error);
+  });
+}
+
  
 // MESSAGE ROUTER
  
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
+  // Forward NOTES_UPDATED to the active tab's content script
+  if (request.action === "NOTES_UPDATED") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          action: "NOTES_UPDATED",
+          url: request.url,
+        });
+      }
+    });
+    sendResponse({ ok: true });
+    return;
+  }
+
   const actions = {
-    ADD_NOTE: () => addNote(request.url, request.note),
+    ADD_NOTE:    () => addNote(request.url, request.note),
     DELETE_NOTE: () => deleteNote(request.url, request.id),
-    GET_NOTES: () => getSiteNotes(request.url),
-    CHECK_SITE: () => siteHasNotes(request.url),
+    GET_NOTES:   () => getSiteNotes(request.url),
+    CHECK_SITE:  () => siteHasNotes(request.url),
+    GET_ALL:     () => getAllSites(),
+    DELETE_SITE: () => deleteSite(request.url),
   };
 
   const action = actions[request.action];

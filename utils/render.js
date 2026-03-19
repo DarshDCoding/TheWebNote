@@ -1,4 +1,4 @@
-const renderElement = (note) => `
+export const renderElement = (note) => `
     <div class="task-card priority-${note.priority}">
 
         ${note.img ? `<img src="${note.img}" alt="Task Image" class="task-image">` : ""}
@@ -8,7 +8,7 @@ const renderElement = (note) => `
                 <p class="btn-action date">${note.createdAt}</p>
                 <div class= "btn-actions">
                   <!-- <button class="btn-action btn-edit" data-id="${note.id}">Edit</button> -->
-                  <button class="btn-action btn-delete" data-id="${note.id}">Delete</button>
+                  <button class="btn-action btn-delete" data-id="${note.id}" data-url="${note._url || ''}">Delete</button>
                 </div>
             </div>
         </div>

@@ -37,6 +37,10 @@ inputImage.addEventListener("change", (event) => {
   }
 });
 
+document.getElementById("dashboardBtn").addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
+});
+
 const handeSubmit = () => {
   const inputData = InputProcessing(getCurrentDateTime, getCurrentImageURL());
 
@@ -58,6 +62,7 @@ const handeSubmit = () => {
 
       data = response;
       RenderNotes(data);
+      chrome.runtime.sendMessage({ action: "NOTES_UPDATED", url: urlExtract(activeTabUrl) });
     },
   );
 };
@@ -98,3 +103,6 @@ addGlobalEventListner("click", ".btn-delete", (e) =>
   deleteNote(e, urlExtract(activeTabUrl), RenderNothingToShow),
 );
 loadNotes();
+
+// Focus input manually (autofocus blocked in iframes)
+setTimeout(() => taskInputField.focus(), 100);

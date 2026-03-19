@@ -4,7 +4,7 @@ initSmartToggle();
 function initSmartToggle() {
   const site = new URL(window.location.href).hostname;
 
-  chrome.runtime.sendMessage(
+  safeSendMessage(
     { action: "CHECK_SITE", url: site },
     (hasNotes) => {
       if (!hasNotes) return;
@@ -14,7 +14,32 @@ function initSmartToggle() {
 }
 
 
-// ─── INJECT SHARED STYLES ────────────────────────────────────────────────────
+// ─── SAFE RUNTIME MESSENGER ──────────────────────────────────────────────────
+// Wraps chrome.runtime.sendMessage to handle invalidated extension context
+
+function safeSendMessage(msg, callback) {
+  try {
+    chrome.runtime.sendMessage(msg, (response) => {
+      if (chrome.runtime.lastError) {
+        // Context invalidated or extension reloaded — silently bail
+        console.warn("TheWebNote: extension context lost.", chrome.runtime.lastError.message);
+        removeToggleButton();
+        return;
+      }
+      callback?.(response);
+    });
+  } catch (e) {
+    console.warn("TheWebNote: extension context invalidated.", e.message);
+    removeToggleButton();
+  }
+}
+
+function removeToggleButton() {
+  document.getElementById("webnote-toggle")?.remove();
+  removeNotesUI();
+}
+
+
 
 function injectStyles() {
   if (document.getElementById("webnote-styles")) return;
@@ -65,11 +90,19 @@ function openFloatingPopup() {
     overflow:     "hidden",
     zIndex:       "999998",
     boxShadow:    "0 20px 60px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.12)",
-    animation:    "webnote-pop-in 0.5s cubic-bezier(0.34,1.56,0.64,1)",
+    animation:    "webnote-pop-in 0.22s cubic-bezier(0.34,1.56,0.64,1)",
   });
 
+  let popupUrl;
+  try {
+    popupUrl = chrome.runtime.getURL("index.html");
+  } catch (e) {
+    console.warn("TheWebNote: extension context invalidated.", e.message);
+    removeToggleButton();
+    return;
+  }
   const iframe = document.createElement("iframe");
-  iframe.src = chrome.runtime.getURL("index.html");
+  iframe.src = popupUrl;
   Object.assign(iframe.style, {
     width:   "100%",
     height:  "100%",
@@ -141,11 +174,16 @@ function createToggleButton(site) {
 
   // ── Icon ────────────────────────────────────────────────────────────────────
   const img = document.createElement("img");
-  img.src = chrome.runtime.getURL("assets/icons/icon128.png");
+  try {
+    img.src = chrome.runtime.getURL("assets/icons/icon128.png");
+  } catch (e) {
+    console.warn("TheWebNote: extension context invalidated.", e.message);
+    return;
+  }
   img.alt = "TheWebNote";
   Object.assign(img.style, {
-    width:      "45px",
-    height:     "45px",
+    width:      "32px",
+    height:     "32px",
     borderRadius: "4px",
     objectFit:  "contain",
     flexShrink: "0",
@@ -193,7 +231,7 @@ function createToggleButton(site) {
   }
 
   // ── Fetch counts, build count nodes, then expand ────────────────────────────
-  chrome.runtime.sendMessage({ action: "GET_NOTES", url: site }, (data) => {
+  safeSendMessage({ action: "GET_NOTES", url: site }, (data) => {
     if (!data) return;
 
     const entries = priorityConfig
@@ -258,3 +296,78 @@ function createToggleButton(site) {
     }, 300);                   // let collapse finish first
   });
 }
+
+// ─── REFRESH TOGGLE COUNTS ────────────────────────────────────────────────────
+
+function refreshToggleCounts(site) {
+  const pill     = document.getElementById("webnote-toggle");
+  if (!pill) return;
+
+  // countsEl is the last span child, divider is the middle one
+  const children  = pill.querySelectorAll("span");
+  const divider   = children[0];
+  const countsEl  = children[1];
+  if (!countsEl) return;
+
+  const priorityConfig = [
+    { key: "important", color: "#ef4444" },
+    { key: "medium",    color: "#eab308" },
+    { key: "normal",    color: "#64748b" },
+  ];
+
+  safeSendMessage({ action: "GET_NOTES", url: site }, (data) => {
+    if (!data) return;
+
+    const entries = priorityConfig
+      .map(({ key, color }) => ({ count: (data[key] || []).length, color }))
+      .filter(({ count }) => count > 0);
+
+    // Clear and rebuild counts
+    countsEl.innerHTML = "";
+
+    if (entries.length === 0) {
+      pill.style.maxWidth    = "44px";
+      pill.style.padding     = "6px";
+      if (divider) divider.style.opacity = "0";
+      countsEl.style.opacity = "0";
+      return;
+    }
+
+    entries.forEach(({ count, color }, i) => {
+      const dot = document.createElement("span");
+      Object.assign(dot.style, {
+        width: "8px", height: "8px", borderRadius: "50%",
+        background: color, display: "inline-block", flexShrink: "0",
+      });
+
+      const num = document.createElement("span");
+      num.textContent = count;
+      num.style.color = color;
+
+      countsEl.appendChild(dot);
+      countsEl.appendChild(num);
+
+      if (i < entries.length - 1) {
+        const sep = document.createElement("span");
+        sep.textContent = "·";
+        Object.assign(sep.style, { color: "#cbd5e1", fontSize: "14px" });
+        countsEl.appendChild(sep);
+      }
+    });
+
+    // Ensure pill is expanded to show counts
+    pill.style.maxWidth    = "200px";
+    pill.style.padding     = "6px 10px 6px 6px";
+    if (divider) divider.style.opacity = "1";
+    countsEl.style.opacity = "1";
+  });
+}
+
+// ─── LISTEN FOR NOTES_UPDATED FROM BACKGROUND ────────────────────────────────
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "NOTES_UPDATED") {
+    const site = new URL(window.location.href).hostname;
+    refreshToggleCounts(site);
+  }
+});
