@@ -2,7 +2,7 @@
 
 # 📝 TheWebNote
 
-A Chrome extension that lets you save notes on any website and automatically shows them the next time you visit.
+The web has no memory — until now. Leave notes on any website and find them waiting, right where they belong.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
