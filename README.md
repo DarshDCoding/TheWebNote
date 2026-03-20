@@ -51,17 +51,23 @@ The web has no memory — until now. Leave notes on any website and find them wa
 
 ## 🚀 Installation
 
-### For non-technical users
+### Step 1 — Download
 
-1. On this GitHub page, click the green **Code** button → **Download ZIP**
-2. Once downloaded, locate the ZIP (usually in your Downloads folder) and extract it
-3. After extracting, you will see a folder named **TheWebNote** — open it. Inside you will find **another folder also named TheWebNote**. This inner folder is the one that contains `manifest.json` — that is the folder you need to load into Chrome
-4. Open Chrome and go to `chrome://extensions`
-5. Enable **Developer mode** using the toggle at the top right
-6. Click **Load unpacked** and select the **inner TheWebNote folder** (the one that contains `manifest.json`)
-7. TheWebNote icon will appear in your Chrome toolbar — you're ready to go!
+1. Go to the [**Releases page**](../../releases) of this repository
+2. Find the latest release and download the `.rar` file listed under **Assets**
 
-> ⚠️ **Important:** Make sure you select the inner folder that directly contains `manifest.json`, not the outer wrapper folder. Chrome will show an error if you select the wrong one.
+### Step 2 — Extract
+
+Extract the `.rar` file to a folder on your computer (e.g. Desktop).
+
+> 💡 To open `.rar` files you need a tool like [WinRAR](https://www.rarlab.com/) (Windows) or [The Unarchiver](https://theunarchiver.com/) (Mac). Most Linux systems support it natively via `unrar`.
+
+### Step 3 — Load into Chrome
+
+1. Open Chrome and go to `chrome://extensions`
+2. Enable **Developer mode** using the toggle at the top right
+3. Click **Load unpacked** and select the extracted folder (the one that contains `manifest.json`)
+4. TheWebNote icon will appear in your Chrome toolbar — you're ready to go!
 
 ---
 
@@ -199,8 +205,14 @@ All data operations go through `background.js` via `chrome.runtime.sendMessage`:
 **Q: I installed the extension but I don't see the toggle button on websites.**
 A: The floating pill only appears on sites where you have already saved at least one note. Visit a site, open the popup, add a note, then reload the page.
 
-**Q: I selected the wrong folder during Load unpacked and Chrome shows an error.**
-A: Make sure you select the inner `TheWebNote` folder — the one that directly contains `manifest.json`. Not the outer wrapper folder created by the ZIP extraction.
+**Q: Chrome shows an error when I click Load unpacked.**
+A: Make sure you are selecting the folder that directly contains `manifest.json`. If you see an error, open the extracted folder and check that `manifest.json` is at the root level of the folder you are selecting.
+
+**Q: I can't open the `.rar` file.**
+A: You need an extraction tool. Download [WinRAR](https://www.rarlab.com/) on Windows or [The Unarchiver](https://theunarchiver.com/) on Mac. On Linux, run `sudo apt install unrar` then `unrar x filename.rar`.
+
+**Q: Where do I download the latest version?**
+A: Always download from the [Releases page](../../releases) of this repository. Do not use the green Code → Download ZIP button as it creates a nested folder structure.
 
 **Q: My notes disappeared after I cleared my browser data.**
 A: Notes are stored in Chrome's IndexedDB. Clearing browser data (cookies, cache, site data) will erase them. Until an export feature is added, avoid clearing site data for `chrome-extension://` origins.
