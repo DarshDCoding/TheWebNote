@@ -5,7 +5,7 @@
 The web has no memory — until now. Leave notes on any website and find them waiting, right where they belong.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/badge/license-GPL--v3-blue)
 ![Chrome](https://img.shields.io/badge/browser-Chrome%2088+-orange)
 ![Manifest](https://img.shields.io/badge/manifest-V3-purple)
 ![Build](https://img.shields.io/badge/build-no%20bundler-lightgrey)
@@ -68,6 +68,7 @@ Extract the `.rar` file to a folder on your computer (e.g. Desktop).
 2. Enable **Developer mode** using the toggle at the top right
 3. Click **Load unpacked** and select the extracted folder (the one that contains `manifest.json`)
 4. TheWebNote icon will appear in your Chrome toolbar — you're ready to go!
+
 
 ---
 
@@ -252,7 +253,18 @@ TheWebNote is designed with privacy as a core principle:
 
 ## 📄 License
 
-Open source and free to use. Enjoy!
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+
+This means you are free to:
+- ✅ Use it personally or commercially
+- ✅ Fork and modify it
+- ✅ Distribute it
+
+Under the condition that:
+- 📋 Any modified version you distribute must also be open source under GPL-3.0
+- 📋 The original copyright and license notice must be kept
+
+See the [LICENSE](./LICENSE) file for the full license text.
 
 ---
 
