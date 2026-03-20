@@ -1,6 +1,19 @@
+<div align="center">
+
 # 📝 TheWebNote
 
-A Chrome extension that lets you save notes on any website and automatically shows them the next time you visit. All data stays on your device — no accounts, no servers, no tracking.
+A Chrome extension that lets you save notes on any website and automatically shows them the next time you visit.
+
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Chrome](https://img.shields.io/badge/browser-Chrome%2088+-orange)
+![Manifest](https://img.shields.io/badge/manifest-V3-purple)
+![Build](https://img.shields.io/badge/build-no%20bundler-lightgrey)
+
+<!-- Add a demo GIF here once recorded -->
+<!-- ![Demo](assets/demo.gif) -->
+
+</div>
 
 ---
 
@@ -13,6 +26,26 @@ A Chrome extension that lets you save notes on any website and automatically sho
 - 📂 Central dashboard to view, manage and delete notes across all sites
 - 🌙 Dark mode with persistent preference
 - 🔒 100% local — your data never leaves your device
+
+---
+
+## 🖥️ Browser Compatibility
+
+| Browser | Support |
+|---------|---------|
+| Chrome 88+ | ✅ Fully supported |
+| Edge 88+ (Chromium) | ✅ Should work |
+| Firefox | ❌ Not supported (MV3 differences) |
+| Safari | ❌ Not supported |
+
+> TheWebNote uses **Manifest V3** which requires Chrome 88 or higher. If you are on an older version of Chrome, please update before installing.
+
+---
+
+## 📋 Prerequisites
+
+- **Google Chrome** version 88 or higher
+- No Node.js, no npm, no build step — the extension runs as plain ES modules
 
 ---
 
@@ -29,6 +62,29 @@ A Chrome extension that lets you save notes on any website and automatically sho
 7. TheWebNote icon will appear in your Chrome toolbar — you're ready to go!
 
 > ⚠️ **Important:** Make sure you select the inner folder that directly contains `manifest.json`, not the outer wrapper folder. Chrome will show an error if you select the wrong one.
+
+---
+
+## 🧠 How It Works
+
+### Adding a note
+Type your note in the popup input and hit **Enter** or **Add Task**.
+
+To set priority, add a tag at the end of your note:
+
+| Tag | Priority |
+|-----|----------|
+| `#IMP` | 🔴 Important |
+| `#MED` | 🟡 Medium |
+| *(none)* | ⚫ Normal |
+
+Example: `Read this article later #IMP`
+
+### Floating toggle pill
+When you visit a site that has saved notes, a pill-shaped button appears in the bottom-right corner. It shows the count of notes per priority. Clicking it opens the popup as a floating iframe over the page.
+
+### Dashboard
+Click **Dashboard** in the popup to open the full dashboard in a new tab. It shows all notes grouped by website. Each site card displays notes in a horizontal grid (min 300px per card). Up to 5 notes are shown by default with a **Show all** toggle for the rest.
 
 ---
 
@@ -64,36 +120,13 @@ TheWebNote/                     # outer folder (created by ZIP extraction)
     │
     └── assets/
         ├── icons/
-        │   └── icon128.png     # Extension icon
+        │   └── icon128.png         # Extension icon
         └── svgs/
             ├── darkMode.svg        # Theme toggle icon (shown in light mode)
             ├── lightMode.svg       # Theme toggle icon (shown in dark mode)
             ├── nothingToShow.svg   # Empty state illustration
             └── lookingToShow.svg   # Loading state illustration
 ```
-
----
-
-## 🧠 How It Works
-
-### Adding a note
-Type your note in the popup input and hit **Enter** or **Add Task**.
-
-To set priority, add a tag at the end of your note:
-
-| Tag | Priority |
-|-----|----------|
-| `#IMP` | 🔴 Important |
-| `#MED` | 🟡 Medium |
-| *(none)* | ⚫ Normal |
-
-Example: `Read this article later #IMP`
-
-### Floating toggle pill
-When you visit a site that has saved notes, a pill-shaped button appears in the bottom-right corner. It shows the count of notes per priority. Clicking it opens the popup as a floating iframe over the page.
-
-### Dashboard
-Click **Dashboard** in the popup to open the full dashboard in a new tab. It shows all notes grouped by website. Each site card displays notes in a horizontal grid (min 300px per card). Up to 5 notes are shown by default with a **Show all** toggle for the rest.
 
 ---
 
@@ -148,6 +181,50 @@ All data operations go through `background.js` via `chrome.runtime.sendMessage`:
 - **Dark mode** — controlled by `data-theme` attribute on `<html>`, persisted in `localStorage` with key `webnote-theme`
 - **Iframe popup** — `index.html` is loaded as an iframe inside `content.js` so the full popup UI appears floating on the page
 - **Priority syntax** — parsed in `utils/inputProcess.js` by reading the last 4 characters of the input
+
+---
+
+## ⚠️ Known Issues & Limitations
+
+- **Notes are tied to the browser** — since data is stored in IndexedDB, clearing your browser data or cache will permanently delete all notes. There is no backup mechanism yet
+- **Chrome only** — Manifest V3 implementation differs between browsers; Firefox and Safari are not currently supported
+- **`autofocus` blocked in iframe** — Chrome blocks autofocus on inputs inside cross-origin iframes, so the popup input is focused manually via `setTimeout` instead
+- **Image storage** — images are stored as base64 strings in IndexedDB. Very large images may slow down reads. Compression is not applied currently
+- **No edit functionality** — notes can only be created or deleted, not edited after creation
+
+---
+
+## ❓ FAQ
+
+**Q: I installed the extension but I don't see the toggle button on websites.**
+A: The floating pill only appears on sites where you have already saved at least one note. Visit a site, open the popup, add a note, then reload the page.
+
+**Q: I selected the wrong folder during Load unpacked and Chrome shows an error.**
+A: Make sure you select the inner `TheWebNote` folder — the one that directly contains `manifest.json`. Not the outer wrapper folder created by the ZIP extraction.
+
+**Q: My notes disappeared after I cleared my browser data.**
+A: Notes are stored in Chrome's IndexedDB. Clearing browser data (cookies, cache, site data) will erase them. Until an export feature is added, avoid clearing site data for `chrome-extension://` origins.
+
+**Q: The priority tag isn't working — my note is showing as Normal.**
+A: The tag must be the last 4 characters of the input with no space before it. For example `Read this #IMP` — note there is a space before `#IMP` which means the full tag including the space is `#IMP` and the parser reads the last 4 characters as `#IMP`. Make sure there are no trailing spaces after the tag.
+
+**Q: Can I use this on Firefox?**
+A: Not currently. TheWebNote uses Chrome's Manifest V3 APIs which behave differently on Firefox. Firefox support is not planned in the near term.
+
+**Q: Does TheWebNote send any data to a server?**
+A: No. All notes are stored entirely on your device in IndexedDB. No data is ever sent to any external server. The only network request the extension makes is fetching website favicons from Google's favicon service for display in the dashboard.
+
+---
+
+## 🔒 Privacy
+
+TheWebNote is designed with privacy as a core principle:
+
+- All note data is stored locally in your browser's **IndexedDB** — it never leaves your device
+- No analytics, no telemetry, no tracking of any kind
+- No account or sign-in required
+- The only external request made is to `https://www.google.com/s2/favicons` to fetch website favicons for display in the dashboard — no note content is ever included in this request
+- The extension requests only the permissions it needs: `storage`, `activeTab`, `tabs`, and `scripting`
 
 ---
 
