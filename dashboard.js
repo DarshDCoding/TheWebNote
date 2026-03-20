@@ -53,7 +53,7 @@ function buildSiteCard(url, data) {
   const delSiteBtn = document.createElement("button");
   delSiteBtn.className   = "site-delete-btn";
   delSiteBtn.title       = "Delete all notes for this site";
-  delSiteBtn.textContent = "🗑";
+  delSiteBtn.innerHTML = `<img src = "${chrome.runtime.getURL("assets/svgs/deleteCard.svg")}" style= "height: 50px; width: 50px">`;
   delSiteBtn.addEventListener("click", async () => {
     await sendMessage({ action: "DELETE_SITE", url });
     card.classList.add("site-card-fade-out");

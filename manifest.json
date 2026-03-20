@@ -52,6 +52,7 @@
   {
     "resources": [
       "assets/icons/*",
+      "assets/svgs/*",
       "index.html",
       "style.css",
       "popup.js",
