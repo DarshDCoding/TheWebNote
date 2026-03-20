@@ -39,12 +39,7 @@ inputImage.addEventListener("change", (event) => {
 });
 
 document.getElementById("dashboardBtn").addEventListener("click", () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const openerTabId = tabs[0]?.id;
-    const url = chrome.runtime.getURL("dashboard.html") +
-      (openerTabId ? `?openerTabId=${openerTabId}` : "");
-    chrome.tabs.create({ url });
-  });
+  chrome.tabs.create({ url: chrome.runtime.getURL("dashboard/dashboard.html") });
 });
 
 const handeSubmit = () => {

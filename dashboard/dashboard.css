@@ -215,11 +215,3 @@ header {
   background: #f1f5f9;
   border-color: var(--primary-blue);
 }
-/* ── Dark mode toggle — fixed to top-right ── */
-#themeToggle {
-  position: fixed;
-  top: 20px;
-  right: 28px;
-  z-index: 100;
-  margin-left: 0;
-}

@@ -19,7 +19,7 @@
     "service_worker": "background.js"
   },
 
-  "options_page": "dashboard.html",
+  "options_page": "dashboard/dashboard.html",
 
   "permissions": [
     "storage",
@@ -55,8 +55,12 @@
       "assets/svgs/*",
       "index.html",
       "style.css",
+      "darkMode.css",
       "popup.js",
-      "utils/*"
+      "utils/*",
+      "dashboard/dashboard.html",
+      "dashboard/dashboard.css",
+      "dashboard/dashboard.js"
     ],
     "matches": ["<all_urls>"]
   }
