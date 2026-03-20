@@ -1,3 +1,4 @@
+import { initTheme } from "./utils/toggleDark.js";
 import { activeTabUrl, urlExtract } from "./utils/urls.js";
 import { getCurrentDateTime } from "./utils/date.js";
 import { InputProcessing } from "./utils/inputProcess.js";
@@ -38,7 +39,12 @@ inputImage.addEventListener("change", (event) => {
 });
 
 document.getElementById("dashboardBtn").addEventListener("click", () => {
-  chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const openerTabId = tabs[0]?.id;
+    const url = chrome.runtime.getURL("dashboard.html") +
+      (openerTabId ? `?openerTabId=${openerTabId}` : "");
+    chrome.tabs.create({ url });
+  });
 });
 
 const handeSubmit = () => {
@@ -106,3 +112,5 @@ loadNotes();
 
 // Focus input manually (autofocus blocked in iframes)
 setTimeout(() => taskInputField.focus(), 100);
+
+initTheme();

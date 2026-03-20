@@ -1,8 +1,20 @@
+import { initTheme } from "./utils/toggleDark.js";
 import { renderElement }        from "./utils/render.js";
 import { addGlobalEventListner } from "./utils/events.js";
 
 const container = document.getElementById("dashboard-container");
-document.getElementById("backBtn").addEventListener("click", () => window.close());
+const params       = new URLSearchParams(window.location.search);
+const openerTabId  = parseInt(params.get("openerTabId"));
+
+document.getElementById("backBtn").addEventListener("click", () => {
+  if (openerTabId) {
+    chrome.tabs.update(openerTabId, { active: true }, () => {
+      window.close();
+    });
+  } else {
+    window.close();
+  }
+});
 
 // ── All DB operations go through background.js via sendMessage ────────────────
 
@@ -172,6 +184,8 @@ function renderDashboard(sites) {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+
+initTheme();
 
 (async () => {
   try {

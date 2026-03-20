@@ -1,0 +1,29 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Moon -->
+  <path 
+    d="M42 32a16 16 0 1 1-16-16 12 12 0 0 0 16 16z" 
+    fill="#6366f1"/>
+
+  <!-- 4-point Stars -->
+  <g fill="#facc15" filter="url(#glow)">
+    <!-- Star 1 -->
+    <path d="M18 12 L20 16 L24 18 L20 20 L18 24 L16 20 L12 18 L16 16 Z"/>
+    
+    <!-- Star 2 -->
+    <path d="M46 16 L48 19 L51 21 L48 23 L46 26 L44 23 L41 21 L44 19 Z"/>
+    
+    <!-- Star 3 -->
+    <path d="M50 38 L52 41 L55 43 L52 45 L50 48 L48 45 L45 43 L48 41 Z"/>
+  </g>
+</svg>

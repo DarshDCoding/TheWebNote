@@ -340,3 +340,25 @@ input[type="file"] {
   align-items: center;
   overflow: hidden;
 }
+/* ── Dark mode toggle button ── */
+.btn-theme {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 8px;
+}
+.btn-theme:hover { opacity: 0.75; }
+.btn-theme img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

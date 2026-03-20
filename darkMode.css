@@ -1,0 +1,63 @@
+/* ══════════════════════════════════════════════════════
+   darkMode.css — all dark theme overrides
+   Applies when <html data-theme="dark">
+   ══════════════════════════════════════════════════════ */
+
+[data-theme="dark"] {
+  --bg-color:      #0f172a;
+  --primary-white: #1e293b;
+  --primary-dark:  #f1f5f9;
+  --text-main:     #cbd5e1;
+
+  --important-border: #ef4444;
+  --important-bg:     #2d1515;
+  --important-text:   #fca5a5;
+
+  --medium-border: #eab308;
+  --medium-bg:     #2d2510;
+  --medium-text:   #fde68a;
+
+  --normal-border: #334155;
+  --normal-bg:     #1e293b;
+  --normal-text:   #94a3b8;
+}
+
+/* ── Popup / index.html ── */
+[data-theme="dark"] .task-input {
+  border-color: #334155;
+  color: #cbd5e1;
+}
+[data-theme="dark"] .task-input::placeholder { color: #475569; }
+[data-theme="dark"] .task-input:focus { border-color: var(--primary-blue); }
+[data-theme="dark"] .btn-dashboard {
+  border-color: #334155;
+  color: #cbd5e1;
+}
+[data-theme="dark"] .btn-dashboard:hover { background-color: #1e293b; }
+[data-theme="dark"] .task-card { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+[data-theme="dark"] .task-image { background-color: #1e293b; }
+[data-theme="dark"] .task-footer { border-top-color: #334155; }
+
+/* ── Dashboard ── */
+[data-theme="dark"] .site-card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+[data-theme="dark"] .site-card-header {
+  background: #0f172a;
+  border-bottom-color: #334155;
+}
+[data-theme="dark"] .site-title-link { color: #f1f5f9; }
+[data-theme="dark"] .site-title-link:hover { color: var(--primary-blue); }
+[data-theme="dark"] .site-delete-btn { color: #475569; }
+[data-theme="dark"] .btn-show-all { border-color: #334155; color: var(--primary-blue); }
+[data-theme="dark"] .btn-show-all:hover { background: #1e293b; }
+[data-theme="dark"] .dashboard-subtitle { color: #475569; }
+[data-theme="dark"] .btn-back {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+[data-theme="dark"] .btn-back:hover { background-color: #334155; }
+[data-theme="dark"] .empty-state { color: #475569; }
