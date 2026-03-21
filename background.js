@@ -78,7 +78,7 @@ function addNote(url, note) {
   });
 }
 
-// DELETE NOTE (O(n)) will think in future for o
+// DELETE NOTE (O(n))
 
 function deleteNote (url, noteId) {
   return new Promise(async (resolve, reject) => {
@@ -126,6 +126,69 @@ function deleteNote (url, noteId) {
   })
 }
 
+
+ 
+// UPDATE NOTE
+// Finds the note by id (across all priority buckets), merges the updated
+// fields, and moves it to a different priority bucket if priority changed.
+ 
+
+function updateNote(url, noteId, updates) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const siteData   = await getSiteNotes(url);
+      const priorities = ["important", "medium", "normal"];
+
+      let foundNote     = null;
+      let oldPriority   = null;
+      let foundIndex    = -1;
+
+      // ── Find the note ──
+      for (const priority of priorities) {
+        const idx = siteData[priority].findIndex(n => n.id === noteId);
+        if (idx !== -1) {
+          foundNote   = siteData[priority][idx];
+          oldPriority = priority;
+          foundIndex  = idx;
+          break;
+        }
+      }
+
+      if (!foundNote) {
+        // Note not found — reject so the caller can handle gracefully
+        return reject(new Error(`Note ${noteId} not found`));
+      }
+
+      // ── Merge: keep existing fields, overwrite only what changed ──
+      const updatedNote = {
+        ...foundNote,
+        note:     updates.note     !== undefined ? updates.note     : foundNote.note,
+        img:      updates.img      !== undefined ? updates.img      : foundNote.img,
+        priority: updates.priority !== undefined ? updates.priority : foundNote.priority,
+        // id, createdAt, status are intentionally preserved unchanged
+      };
+
+      const newPriority = updatedNote.priority;
+
+      // ── Remove from old bucket ──
+      siteData[oldPriority].splice(foundIndex, 1);
+
+      // ── Insert into (possibly new) bucket ──
+      siteData[newPriority].push(updatedNote);
+
+      // ── Persist ──
+      const tx    = db.transaction("notes", "readwrite");
+      const store = tx.objectStore("notes");
+      const req   = store.put(siteData, url);
+
+      req.onsuccess = () => resolve(siteData);
+      req.onerror   = () => reject(req.error);
+
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 
 
  
@@ -217,6 +280,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     CHECK_SITE:  () => siteHasNotes(request.url),
     GET_ALL:     () => getAllSites(),
     DELETE_SITE: () => deleteSite(request.url),
+    UPDATE_NOTE: () => updateNote(request.url, request.id, request.updates),
   };
 
   const action = actions[request.action];

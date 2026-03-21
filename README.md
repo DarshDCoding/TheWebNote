@@ -4,7 +4,7 @@
 
 The web has no memory — until now. Leave notes on any website and find them waiting, right where they belong.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--v3-blue)
 ![Chrome](https://img.shields.io/badge/browser-Chrome%2088+-orange)
 ![Manifest](https://img.shields.io/badge/manifest-V3-purple)
@@ -20,6 +20,7 @@ The web has no memory — until now. Leave notes on any website and find them wa
 ## ✨ Features
 
 - 📌 Add notes to any website while browsing
+- ✏️ Edit existing notes — update text, image, or priority at any time
 - 🔴🟡⚫ Three priority levels — **Important**, **Medium**, **Normal**
 - 🖼️ Attach images to your notes
 - 🔔 Floating toggle button appears automatically on sites that have notes
@@ -87,6 +88,19 @@ To set priority, add a tag at the end of your note:
 
 Example: `Read this article later #IMP`
 
+### Editing a note
+Click the **Edit** button on any note card in the popup to enter edit mode.
+
+- The note's existing text is loaded into the input field, including its priority tag
+- If the note has an image, it is shown in the preview area
+- Make your changes — you can update the text, change the priority tag, attach a new image, or remove the existing one
+- The **Add Task** button becomes **Save Edit** (highlighted in purple) — click it or press **Enter** to save
+- The **Dashboard** button becomes **Remove Image** if the note has an image, or **Cancel Edit** if it does not — click it to remove the image or discard all changes respectively
+- If you change the priority tag, the note is automatically moved to the correct priority bucket on save
+- Clicking **Save Edit** with no text and no image discards the edit and returns to normal mode without saving
+
+> **Note:** The Edit button is only available in the popup. It does not appear on note cards in the Dashboard view.
+
 ### Floating toggle pill
 When you visit a site that has saved notes, a pill-shaped button appears in the bottom-right corner. It shows the count of notes per priority. Clicking it opens the popup as a floating iframe over the page.
 
@@ -118,9 +132,11 @@ TheWebNote/                     # outer folder (created by ZIP extraction)
     ├── utils/
     │   ├── date.js             # Date/time formatting
     │   ├── events.js           # Global event delegation helper
+    │   ├── helpers.js          # Shared pure helpers (priority parsing, file conversion)
     │   ├── imageHandler.js     # Image preview in popup
     │   ├── inputProcess.js     # Parses note input + priority tags
-    │   ├── noteService.js      # Delete note handler (popup)
+    │   ├── editHandler.js      # Edit mode UI state (enter, reset, image removal)
+    │   ├── noteService.js      # Delete + update note handlers (popup)
     │   ├── render.js           # renderElement + RenderNotes
     │   ├── toggleDark.js       # Dark mode toggle (shared by popup + dashboard)
     │   └── urls.js             # Active tab URL helpers
@@ -173,11 +189,14 @@ All data operations go through `background.js` via `chrome.runtime.sendMessage`:
 |--------|---------|---------|
 | `ADD_NOTE` | `{ url, note }` | updated `siteData` |
 | `DELETE_NOTE` | `{ url, id }` | updated `siteData` |
+| `UPDATE_NOTE` | `{ url, id, updates }` | updated `siteData` |
 | `GET_NOTES` | `{ url }` | `siteData` |
 | `CHECK_SITE` | `{ url }` | `boolean` |
 | `GET_ALL` | — | `[{ url, data }]` |
 | `DELETE_SITE` | `{ url }` | — |
 | `NOTES_UPDATED` | `{ url }` | forwards to content script |
+
+The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, priority }`. Fields not included are preserved from the stored note. If `priority` changes, the note is automatically moved between priority buckets in the database.
 
 ---
 
@@ -187,7 +206,9 @@ All data operations go through `background.js` via `chrome.runtime.sendMessage`:
 - **No build step** — plain ES modules, no bundler needed
 - **Dark mode** — controlled by `data-theme` attribute on `<html>`, persisted in `localStorage` with key `webnote-theme`
 - **Iframe popup** — `index.html` is loaded as an iframe inside `content.js` so the full popup UI appears floating on the page
-- **Priority syntax** — parsed in `utils/inputProcess.js` by reading the last 4 characters of the input
+- **Priority syntax** — parsed in `utils/inputProcess.js` (add) and `utils/helpers.js` (edit) by reading the last 4 characters of the input
+- **Edit state** — all edit UI state lives in `utils/editHandler.js`; `popup.js` delegates to it entirely, keeping concerns separated
+- **No extra fetch on edit** — the note to edit is looked up directly from the local in-memory cache in `popup.js`, so edit mode is instant with no network round-trip
 
 ---
 
@@ -197,7 +218,7 @@ All data operations go through `background.js` via `chrome.runtime.sendMessage`:
 - **Chrome only** — Manifest V3 implementation differs between browsers; Firefox and Safari are not currently supported
 - **`autofocus` blocked in iframe** — Chrome blocks autofocus on inputs inside cross-origin iframes, so the popup input is focused manually via `setTimeout` instead
 - **Image storage** — images are stored as base64 strings in IndexedDB. Very large images may slow down reads. Compression is not applied currently
-- **No edit functionality** — notes can only be created or deleted, not edited after creation
+- **Edit is popup-only** — notes can be edited from the popup but not from the Dashboard view
 
 ---
 
@@ -219,7 +240,13 @@ A: Always download from the [Releases page](../../releases) of this repository. 
 A: Notes are stored in Chrome's IndexedDB. Clearing browser data (cookies, cache, site data) will erase them. Until an export feature is added, avoid clearing site data for `chrome-extension://` origins.
 
 **Q: The priority tag isn't working — my note is showing as Normal.**
-A: The tag must be the last 4 characters of the input with no space before it. For example `Read this #IMP` — note there is a space before `#IMP` which means the full tag including the space is `#IMP` and the parser reads the last 4 characters as `#IMP`. Make sure there are no trailing spaces after the tag.
+A: The tag must be the last 4 characters of the input with no space before it. For example `Read this #IMP` — note there is a space before `#IMP` which means the full tag including the space is `#IMP` and the parser reads the last 4 characters as `#IMP`. Make sure there are no trailing spaces after the tag. This applies to both adding and editing notes.
+
+**Q: Can I change the priority of a note when editing it?**
+A: Yes. While in edit mode, simply update the tag at the end of the text (e.g. change `#IMP` to `#MED`, or remove it entirely for Normal). The note will be moved to the correct priority bucket when you save.
+
+**Q: Can I edit a note in the Dashboard?**
+A: Not currently. The Edit button only appears in the popup. To edit a note, open the popup on the relevant site and click Edit there.
 
 **Q: Can I use this on Firefox?**
 A: Not currently. TheWebNote uses Chrome's Manifest V3 APIs which behave differently on Firefox. Firefox support is not planned in the near term.

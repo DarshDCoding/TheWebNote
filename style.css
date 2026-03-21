@@ -314,6 +314,42 @@ input[type="file"] {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+/* ── Note card action buttons wrapper ── */
+/* Keeps Edit + Delete on a single line with consistent spacing */
+.btn-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ── Edit button ── */
+.btn-edit {
+  color: inherit;
+}
+
+.btn-edit:hover {
+  opacity: 1;
+  background-color: rgba(59, 130, 246, 0.08);
+  color: var(--primary-blue);
+}
+
+/* ── Edit-mode button states ── */
+/* "Save Edit" primary button gets a pulsing ring to signal active edit */
+#addTask.edit-active {
+  background-color: #7c3aed;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.35);
+}
+
+/* "Remove Image" / "Cancel Edit" secondary button */
+#dashboardBtn.edit-secondary {
+  border-color: #f87171;
+  color: #ef4444;
+}
+#dashboardBtn.edit-secondary:hover {
+  background-color: #fef2f2;
+}
+
 /* Priority Variants */
 .priority-important {
   border: 2px solid var(--important-border);

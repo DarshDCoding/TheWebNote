@@ -1,5 +1,5 @@
 import { initTheme } from "../utils/toggleDark.js";
-import { renderElement }        from "../utils/render.js";
+import { renderElement }         from "../utils/render.js";
 import { addGlobalEventListner } from "../utils/events.js";
 
 const container = document.getElementById("dashboard-container");
@@ -52,9 +52,9 @@ function buildSiteCard(url, data) {
   link.appendChild(siteName);
 
   const delSiteBtn = document.createElement("button");
-  delSiteBtn.className   = "site-delete-btn";
-  delSiteBtn.title       = "Delete all notes for this site";
-  delSiteBtn.innerHTML = `<img src = "${chrome.runtime.getURL("assets/svgs/deleteCard.svg")}" style= "height: 50px; width: 50px">`;
+  delSiteBtn.className = "site-delete-btn";
+  delSiteBtn.title     = "Delete all notes for this site";
+  delSiteBtn.innerHTML = `<img src="${chrome.runtime.getURL("assets/svgs/deleteCard.svg")}" style="height:50px;width:50px">`;
   delSiteBtn.addEventListener("click", async () => {
     await sendMessage({ action: "DELETE_SITE", url });
     card.classList.add("site-card-fade-out");
@@ -69,10 +69,13 @@ function buildSiteCard(url, data) {
   const notesWrap = document.createElement("div");
   notesWrap.className = "site-notes-wrap";
 
-  // First MAX_VISIBLE — rendered via renderElement from render.js
+  // First MAX_VISIBLE — pass "dashboard" context so Edit button is suppressed
   const visibleWrap = document.createElement("div");
   visibleWrap.className = "notes-visible";
-  visibleWrap.innerHTML = allNotes.slice(0, MAX_VISIBLE).map(renderElement).join("");
+  visibleWrap.innerHTML = allNotes
+    .slice(0, MAX_VISIBLE)
+    .map(note => renderElement(note, "dashboard"))
+    .join("");
   notesWrap.appendChild(visibleWrap);
 
   // Remaining notes in a smooth collapsible
@@ -83,7 +86,9 @@ function buildSiteCard(url, data) {
 
     const collapserInner = document.createElement("div");
     collapserInner.className = "notes-collapser-inner";
-    collapserInner.innerHTML = hidden.map(renderElement).join("");
+    collapserInner.innerHTML = hidden
+      .map(note => renderElement(note, "dashboard"))
+      .join("");
 
     collapser.appendChild(collapserInner);
     notesWrap.appendChild(collapser);
@@ -122,18 +127,19 @@ function setupDeleteHandler() {
 
     // Freeze height, then animate to 0 so cards below slide up
     const cardHeight = taskCard.offsetHeight;
-    taskCard.style.height        = cardHeight + "px";
-    taskCard.style.overflow      = "hidden";
-    taskCard.style.transition    = "height 0.35s ease, opacity 0.25s ease, margin 0.35s ease, padding 0.35s ease";
+    taskCard.style.height     = cardHeight + "px";
+    taskCard.style.overflow   = "hidden";
+    taskCard.style.transition =
+      "height 0.35s ease, opacity 0.25s ease, margin 0.35s ease, padding 0.35s ease";
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        taskCard.style.height         = "0";
-        taskCard.style.opacity        = "0";
-        taskCard.style.marginTop      = "0";
-        taskCard.style.marginBottom   = "0";
-        taskCard.style.paddingTop     = "0";
-        taskCard.style.paddingBottom  = "0";
+        taskCard.style.height        = "0";
+        taskCard.style.opacity       = "0";
+        taskCard.style.marginTop     = "0";
+        taskCard.style.marginBottom  = "0";
+        taskCard.style.paddingTop    = "0";
+        taskCard.style.paddingBottom = "0";
       });
     });
 
@@ -159,14 +165,16 @@ function setupDeleteHandler() {
 
 function checkEmpty() {
   if (!container.querySelector(".site-card")) {
-    container.innerHTML = `<p class="empty-state">No notes saved yet. Start browsing and add some!</p>`;
+    container.innerHTML =
+      `<p class="empty-state">No notes saved yet. Start browsing and add some!</p>`;
   }
 }
 
 function renderDashboard(sites) {
   container.innerHTML = "";
   if (!sites.length) {
-    container.innerHTML = `<p class="empty-state">No notes saved yet. Start browsing and add some!</p>`;
+    container.innerHTML =
+      `<p class="empty-state">No notes saved yet. Start browsing and add some!</p>`;
     return;
   }
   sites.forEach(({ url, data }) => container.appendChild(buildSiteCard(url, data)));
