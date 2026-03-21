@@ -52,24 +52,80 @@ The web has no memory — until now. Leave notes on any website and find them wa
 
 ## 🚀 Installation
 
+> ⚠️ **Important — keep your TheWebNote folder safe.**
+> TheWebNote is a manually loaded extension (not from the Chrome Web Store), so all your notes are tied to the folder you load it from. **Do not delete or move this folder** after installation or you will lose your notes. A good permanent home is `Documents` or a dedicated `Extensions` folder.
+
 ### Step 1 — Download
 
 1. Go to the [**Releases page**](../../releases) of this repository
-2. Find the latest release and download the `.rar` file listed under **Assets**
+2. Find the latest release and download the `.zip` file listed under **Assets**
 
 ### Step 2 — Extract
 
-Extract the `.rar` file to a folder on your computer (e.g. Desktop).
+Extract the `.zip` file and move the resulting `TheWebNote` folder to a **permanent location** on your computer — somewhere you won't accidentally delete it, such as:
 
-> 💡 To open `.rar` files you need a tool like [WinRAR](https://www.rarlab.com/) (Windows) or [The Unarchiver](https://theunarchiver.com/) (Mac). Most Linux systems support it natively via `unrar`.
+| OS | Suggested location |
+|----|--------------------|
+| Windows | `C:\Users\YourName\Documents\TheWebNote` |
+| Mac | `/Users/YourName/Documents/TheWebNote` |
+| Linux | `/home/yourname/Documents/TheWebNote` |
+
+> ⚠️ **Do not leave it in Downloads.** Many users periodically clean their Downloads folder. If the folder is deleted, Chrome will disable the extension and all notes will be lost.
 
 ### Step 3 — Load into Chrome
 
 1. Open Chrome and go to `chrome://extensions`
 2. Enable **Developer mode** using the toggle at the top right
-3. Click **Load unpacked** and select the extracted folder (the one that contains `manifest.json`)
-4. TheWebNote icon will appear in your Chrome toolbar — you're ready to go!
+3. Click **Load unpacked**
+4. Navigate to and select your `TheWebNote` folder (the one that contains `manifest.json`)
+5. TheWebNote icon will appear in your Chrome toolbar — you're ready to go!
 
+> 💡 Chrome will show a warning saying the extension is unverified. This is normal for manually loaded extensions. Click **Keep** to dismiss it.
+
+---
+
+## 🔄 Installing Updates
+
+> ⚠️ **Never uninstall and reinstall to update.** Uninstalling the extension deletes all your notes permanently. Always use the update script below instead.
+
+When a new version is released, updating takes less than a minute and your notes are completely safe throughout.
+
+### Step 1 — Download the new release
+
+Go to the [**Releases page**](../../releases) and download the latest `.zip` file.
+
+### Step 2 — Extract it anywhere
+
+Extract the zip to any temporary location — Desktop or Downloads is fine since you won't need it after the update.
+
+### Step 3 — Run the update script
+
+Inside the extracted folder you will find two update scripts — run the one for your operating system:
+
+**Windows**
+1. Open the extracted folder
+2. Double-click `update.bat`
+3. The script will automatically find your installed TheWebNote folder and copy the new files in
+4. If it finds more than one TheWebNote folder, it will ask you to pick the correct one
+5. Confirm when prompted
+
+**Mac / Linux**
+1. Open Terminal
+2. Drag `update.sh` from the extracted folder into the Terminal window (this fills in the path automatically)
+3. Press **Enter** to run it
+4. The script will automatically find your installed TheWebNote folder and copy the new files in
+5. Confirm when prompted
+
+> 💡 On Mac you may need to allow the script to run first. If you see a permission error, run this in Terminal: `chmod +x /path/to/update.sh`
+
+### Step 4 — Reload the extension in Chrome
+
+1. Open Chrome and go to `chrome://extensions`
+2. Find **The Web Note** in the list
+3. Click the **reload icon** (the circular arrow ↻ on the extension card)
+4. Done — the new version is active and all your notes are intact
+
+> 💡 You can now delete the temporary folder you extracted in Step 2. Your permanent TheWebNote folder has already been updated.
 
 ---
 
@@ -118,6 +174,8 @@ TheWebNote/                     # outer folder (created by ZIP extraction)
     ├── manifest.json           # Extension config (MV3)
     ├── background.js           # Service worker — IndexedDB + message router
     ├── content.js              # Injected into every page — floating toggle pill
+    ├── update.bat              # Windows update script (run to update safely)
+    ├── update.sh               # Mac/Linux update script (run to update safely)
     │
     ├── index.html              # Popup UI
     ├── popup.js                # Popup logic
@@ -215,6 +273,7 @@ The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, prio
 ## ⚠️ Known Issues & Limitations
 
 - **Notes are tied to the browser** — since data is stored in IndexedDB, clearing your browser data or cache will permanently delete all notes. There is no backup mechanism yet
+- **Uninstalling the extension deletes all data** — Chrome wipes all IndexedDB data scoped to the extension when it is uninstalled. Reinstalling will not recover your notes. Export your data before uninstalling once the export feature is available
 - **Chrome only** — Manifest V3 implementation differs between browsers; Firefox and Safari are not currently supported
 - **`autofocus` blocked in iframe** — Chrome blocks autofocus on inputs inside cross-origin iframes, so the popup input is focused manually via `setTimeout` instead
 - **Image storage** — images are stored as base64 strings in IndexedDB. Very large images may slow down reads. Compression is not applied currently
@@ -226,6 +285,12 @@ The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, prio
 
 **Q: I installed the extension but I don't see the toggle button on websites.**
 A: The floating pill only appears on sites where you have already saved at least one note. Visit a site, open the popup, add a note, then reload the page.
+
+**Q: How do I update to a new version without losing my notes?**
+A: Use the `update.bat` (Windows) or `update.sh` (Mac/Linux) script included in every release. Never uninstall the extension to update — that will permanently delete all your notes. Full instructions are in the [Installing Updates](#-installing-updates) section above.
+
+**Q: Can I just uninstall and reinstall the new version?**
+A: No — uninstalling the extension permanently deletes all your notes from Chrome's IndexedDB. There is currently no way to recover them after uninstalling. Always use the update script instead.
 
 **Q: Chrome shows an error when I click Load unpacked.**
 A: Make sure you are selecting the folder that directly contains `manifest.json`. If you see an error, open the extracted folder and check that `manifest.json` is at the root level of the folder you are selecting.
@@ -256,7 +321,39 @@ A: No. All notes are stored entirely on your device in IndexedDB. No data is eve
 
 ---
 
-## 🔒 Privacy
+## 🛡️ Trust & Security
+
+TheWebNote is a manually loaded extension, which means Chrome will show it as "unverified." Here is exactly what the extension does and does not do so you can make an informed decision before installing.
+
+### What the extension can access
+| Permission | Why it is needed |
+|------------|-----------------|
+| `activeTab` | To read the current tab's URL so notes are saved and loaded for the right website |
+| `tabs` | To open the Dashboard in a new tab and to forward note-update events to the content script |
+| `scripting` | To inject the floating toggle pill into web pages |
+| `storage` | Declared in the manifest but not actively used — all data goes through IndexedDB in the service worker |
+| `host_permissions` (`<all_urls>`) | Required for the content script to run on every website so the floating pill can appear wherever you have notes |
+
+### What the extension does NOT do
+- ❌ It does not read page content, form inputs, passwords, or any text on the pages you visit
+- ❌ It does not make any network requests except fetching favicons from `https://www.google.com/s2/favicons` for display in the Dashboard — and no note data is included in that request
+- ❌ It does not communicate with any external server, API, or database
+- ❌ It does not use any analytics, crash reporting, or telemetry
+- ❌ It does not track your browsing history or the sites you visit
+- ❌ It does not inject ads or modify page content in any way
+
+### Your data never leaves your device
+All notes are stored entirely in your browser's **IndexedDB**, scoped to the extension's own origin (`chrome-extension://...`). No other website, extension, or external party can access this data.
+
+### Verify it yourself
+TheWebNote is fully open source. Every line of code is readable in this repository — there are no compiled bundles, no minified files, and no obfuscated logic. If you are technically inclined, you can audit the entire codebase before installing. The files loaded into Chrome are exactly the files you see here.
+
+### The update scripts
+`update.bat` and `update.sh` only copy files from the new release folder into your existing installation folder. They do not connect to the internet, do not run silently in the background, and stop executing the moment they finish copying. You can open either file in any text editor to read exactly what they do before running them.
+
+---
+
+
 
 TheWebNote is designed with privacy as a core principle:
 
