@@ -1,20 +1,10 @@
-let activeTabUrl = "";
-
-const getActiveTabUrl = (callback) => {
+export const activeTabUrlPromise = new Promise((resolve) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const activeTab = tabs[0];
-    const activeTabUrl = activeTab.url;
-    callback(activeTabUrl);
+    resolve(tabs[0]?.url || "");
   });
-};
-
-getActiveTabUrl((url) => {
-  activeTabUrl = url;
 });
 
-const urlExtract = (url) => {
+export const urlExtract = (url) => {
   const urlArray = url.split("/");
   return urlArray[2];
 };
-
-export {activeTabUrl, getActiveTabUrl, urlExtract};

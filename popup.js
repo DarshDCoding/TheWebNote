@@ -1,12 +1,20 @@
-import { initTheme }                          from "./utils/toggleDark.js";
-import { activeTabUrl, urlExtract }            from "./utils/urls.js";
-import { getCurrentDateTime }                  from "./utils/date.js";
-import { InputProcessing }                     from "./utils/inputProcess.js";
-import { showImagePreview, resetImagePreview, getCurrentImageURL } from "./utils/imageHandler.js";
-import { deleteNote, updateNote }              from "./utils/noteService.js";
-import { RenderNotes, RenderLookingToShow, RenderNothingToShow } from "./utils/render.js";
-import { addGlobalEventListner }               from "./utils/events.js";
-import { extractPriorityFromText }             from "./utils/helpers.js";
+import { initTheme } from "./utils/toggleDark.js";
+import { activeTabUrlPromise, urlExtract } from "./utils/urls.js";
+import { getCurrentDateTime } from "./utils/date.js";
+import { InputProcessing } from "./utils/inputProcess.js";
+import {
+  showImagePreview,
+  resetImagePreview,
+  getCurrentImageURL,
+} from "./utils/imageHandler.js";
+import { deleteNote, updateNote } from "./utils/noteService.js";
+import {
+  RenderNotes,
+  RenderLookingToShow,
+  RenderNothingToShow,
+} from "./utils/render.js";
+import { addGlobalEventListner } from "./utils/events.js";
+import { extractPriorityFromText } from "./utils/helpers.js";
 import {
   getIsEditing,
   getEditingNoteId,
@@ -18,10 +26,10 @@ import {
 } from "./utils/editHandler.js";
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
-const addTaskBtn      = document.getElementById("addTask");
-const inputImage      = document.getElementById("inputImage");
-const taskInputField  = document.getElementById("taskInputField");
-const dashboardBtn    = document.getElementById("dashboardBtn");
+const addTaskBtn = document.getElementById("addTask");
+const inputImage = document.getElementById("inputImage");
+const taskInputField = document.getElementById("taskInputField");
+const dashboardBtn = document.getElementById("dashboardBtn");
 
 // ── Shared note data cache ────────────────────────────────────────────────────
 let data = { important: [], medium: [], normal: [] };
@@ -45,7 +53,9 @@ dashboardBtn.addEventListener("click", () => {
   if (handleSecondaryBtnClick()) return;
 
   // Normal mode → open dashboard tab
-  chrome.tabs.create({ url: chrome.runtime.getURL("dashboard/dashboard.html") });
+  chrome.tabs.create({
+    url: chrome.runtime.getURL("dashboard/dashboard.html"),
+  });
 });
 
 // ── Primary button: Add Note OR Save Edit ─────────────────────────────────────
@@ -58,7 +68,8 @@ const handleSubmit = async () => {
 };
 
 // ── Add note (original flow, unchanged) ──────────────────────────────────────
-function handleAddNote() {
+async function handleAddNote() {
+  const activeTabUrl = await activeTabUrlPromise;
   const inputData = InputProcessing(getCurrentDateTime, getCurrentImageURL());
   if (!inputData) return;
 
@@ -67,19 +78,26 @@ function handleAddNote() {
   chrome.runtime.sendMessage(
     { action: "ADD_NOTE", url: urlExtract(activeTabUrl), note: inputData },
     (response) => {
-      if (!response) { console.error("No response from background"); return; }
+      if (!response) {
+        console.error("No response from background");
+        return;
+      }
       data = response;
       RenderNotes(data);
-      chrome.runtime.sendMessage({ action: "NOTES_UPDATED", url: urlExtract(activeTabUrl) });
+      chrome.runtime.sendMessage({
+        action: "NOTES_UPDATED",
+        url: urlExtract(activeTabUrl),
+      });
     },
   );
 }
 
 // ── Save edit ─────────────────────────────────────────────────────────────────
 async function handleSaveEdit() {
-  const url    = urlExtract(activeTabUrl);
+  const activeTabUrl = await activeTabUrlPromise;
+  const url = urlExtract(activeTabUrl);
   const noteId = getEditingNoteId();
-  const raw    = taskInputField.value.trim();
+  const raw = taskInputField.value.trim();
 
   // Resolve text + priority (priority tag in text overrides stored one)
   let noteText = null;
@@ -92,12 +110,8 @@ async function handleSaveEdit() {
   } else {
     // No text — keep existing priority; we need it from stored data
     // Find the note in the local cache to retrieve its current priority
-    const allNotes = [
-      ...data.important,
-      ...data.medium,
-      ...data.normal,
-    ];
-    const existing = allNotes.find(n => n.id === noteId);
+    const allNotes = [...data.important, ...data.medium, ...data.normal];
+    const existing = allNotes.find((n) => n.id === noteId);
     priority = existing?.priority || "normal";
   }
 
@@ -131,11 +145,14 @@ function loadNotes() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const site = urlExtract(tabs[0].url);
 
-    chrome.runtime.sendMessage({ action: "GET_NOTES", url: site }, (response) => {
-      if (!response) return;
-      data = response;
-      RenderNotes(data);
-    });
+    chrome.runtime.sendMessage(
+      { action: "GET_NOTES", url: site },
+      (response) => {
+        if (!response) return;
+        data = response;
+        RenderNotes(data);
+      },
+    );
   });
 }
 
@@ -151,22 +168,19 @@ taskInputField.addEventListener("keydown", (e) => {
 addTaskBtn.addEventListener("click", handleSubmit);
 
 // ── Delete handler ────────────────────────────────────────────────────────────
-addGlobalEventListner("click", ".btn-delete", (e) =>
-  deleteNote(e, urlExtract(activeTabUrl), RenderNothingToShow),
-);
+addGlobalEventListner("click", ".btn-delete", async (e) => {
+  const activeTabUrl = await activeTabUrlPromise;
+  deleteNote(e, urlExtract(activeTabUrl), RenderNothingToShow);
+});
 
 // ── Edit button handler ───────────────────────────────────────────────────────
 addGlobalEventListner("click", ".btn-edit", (e) => {
-  const btn    = e.target.closest(".btn-edit");
+  const btn = e.target.closest(".btn-edit");
   const noteId = btn.dataset.id;
 
   // Find the note in the local cache — no extra network call needed
-  const allNotes = [
-    ...data.important,
-    ...data.medium,
-    ...data.normal,
-  ];
-  const note = allNotes.find(n => n.id === noteId);
+  const allNotes = [...data.important, ...data.medium, ...data.normal];
+  const note = allNotes.find((n) => n.id === noteId);
 
   if (!note) {
     console.warn("TheWebNote: note not found for edit, id =", noteId);
