@@ -21,7 +21,7 @@
 
   "options_page": "dashboard/dashboard.html",
 
-  "permissions": ["storage", "activeTab", "tabs", "scripting"],
+  "permissions": ["storage", "activeTab", "tabs", "scripting", "downloads"],
 
   "host_permissions": ["<all_urls>", "http://*/*", "https://*/*"],
 
@@ -59,6 +59,20 @@
         "utils/render.js",
         "utils/toggleDark.js",
         "utils/urls.js",
+
+        "utils/exportModal.js",
+        "utils/exporter.js",
+
+        "utils/exporters/exportHelpers.js",
+        "utils/exporters/exportJSON.js",
+        "utils/exporters/exportMD.js",
+        "utils/exporters/exportHTML.js",
+        "utils/exporters/exportCSV.js",
+        "utils/exporters/exportTXT.js",
+        "utils/exporters/exportPDF.js",
+
+        "libs/jszip.min.js",
+        "libs/jspdf.min.js",
 
         "dashboard/dashboard.html",
         "dashboard/dashboard.css",
