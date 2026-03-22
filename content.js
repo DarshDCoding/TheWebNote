@@ -364,3 +364,22 @@ chrome.runtime.onMessage.addListener((message) => {
     refreshToggleCounts(site);
   }
 });
+
+// ─── HIDE PILL ON FULLSCREEN ──────────────────────────────────────────────────
+// Hides the toggle pill whenever the page enters fullscreen (video, game, etc.)
+// and restores it immediately when fullscreen is exited.
+
+function initFullscreenHide() {
+  document.addEventListener("fullscreenchange", () => {
+    const pill = document.getElementById("webnote-toggle");
+    if (!pill) return;
+
+    if (document.fullscreenElement) {
+      pill.style.display = "none";
+    } else {
+      pill.style.display = "flex";
+    }
+  });
+}
+
+initFullscreenHide();
