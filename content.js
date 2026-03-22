@@ -137,8 +137,6 @@ function createToggleButton(site) {
     { key: "normal",    color: "#64748b" },
   ];
 
-  // ── Pill shell ──────────────────────────────────────────────────────────────
-  // Starts collapsed (icon only), expands after counts load, shrinks on open
   const pill = document.createElement("div");
   pill.id = "webnote-toggle";
   Object.assign(pill.style, {
@@ -152,16 +150,15 @@ function createToggleButton(site) {
     gap:          "8px",
     background:   "#ffffff",
     border:       "1.5px solid #e2e8f0",
-    borderRadius: "6px",                   // subtle, not a full pill
-    padding:      "6px",                   // tight — icon only initially
+    borderRadius: "6px",
+    padding:      "6px",
     boxShadow:    "0 4px 12px rgba(0,0,0,0.15)",
     fontFamily:   "'Segoe UI', sans-serif",
     fontSize:     "12px",
     fontWeight:   "700",
     whiteSpace:   "nowrap",
     overflow:     "hidden",
-    maxWidth:     "44px",                  // collapsed to icon width
-    // smooth expand / shrink on maxWidth + padding
+    maxWidth:     "44px",
     transition:   "max-width 0.45s cubic-bezier(0.34,1.2,0.64,1), padding 0.45s ease, box-shadow 0.2s ease",
   });
 
@@ -172,7 +169,6 @@ function createToggleButton(site) {
     pill.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
   });
 
-  // ── Icon ────────────────────────────────────────────────────────────────────
   const img = document.createElement("img");
   try {
     img.src = chrome.runtime.getURL("assets/icons/icon128.png");
@@ -182,17 +178,18 @@ function createToggleButton(site) {
   }
   img.alt = "TheWebNote";
   Object.assign(img.style, {
-    width:      "32px",
-    height:     "32px",
+    width:        "32px",
+    height:       "32px",
     borderRadius: "4px",
-    objectFit:  "contain",
-    flexShrink: "0",
-    display:    "block",
+    objectFit:    "contain",
+    flexShrink:   "0",
+    display:      "block",
   });
   pill.appendChild(img);
 
-  // ── Divider ─────────────────────────────────────────────────────────────────
+  // ── Divider ──
   const divider = document.createElement("span");
+  divider.id = "webnote-divider";
   Object.assign(divider.style, {
     width:      "1px",
     height:     "18px",
@@ -203,23 +200,23 @@ function createToggleButton(site) {
   });
   pill.appendChild(divider);
 
-  // ── Counts wrapper ──────────────────────────────────────────────────────────
+  // ── Counts wrapper ──
   const countsEl = document.createElement("span");
+  countsEl.id = "webnote-counts";
   Object.assign(countsEl.style, {
-    display:    "flex",
-    alignItems: "center",
-    gap:        "6px",
-    opacity:    "0",
-    transition: "opacity 0.2s ease",
+    display:      "flex",
+    alignItems:   "center",
+    gap:          "6px",
+    opacity:      "0",
+    transition:   "opacity 0.2s ease",
     paddingRight: "4px",
   });
   pill.appendChild(countsEl);
 
-  // ── Helpers: expand / collapse ──────────────────────────────────────────────
   function expand() {
-    pill.style.maxWidth   = "200px";
-    pill.style.padding    = "6px 10px 6px 6px";
-    divider.style.opacity = "1";
+    pill.style.maxWidth    = "200px";
+    pill.style.padding     = "6px 10px 6px 6px";
+    divider.style.opacity  = "1";
     countsEl.style.opacity = "1";
   }
 
@@ -230,7 +227,6 @@ function createToggleButton(site) {
     countsEl.style.opacity = "0";
   }
 
-  // ── Fetch counts, build count nodes, then expand ────────────────────────────
   safeSendMessage({ action: "GET_NOTES", url: site }, (data) => {
     if (!data) return;
 
@@ -266,19 +262,16 @@ function createToggleButton(site) {
       }
     });
 
-    // Slight delay so the pill is visible on screen before expanding
     setTimeout(expand, 400);
   });
 
   document.body.appendChild(pill);
 
-  // ── Toggle logic ─────────────────────────────────────────────────────────────
   let isOpen = false;
 
-  // When popup closes → re-expand to show counts
   document.addEventListener("webnote-closed", () => {
     isOpen = false;
-    setTimeout(expand, 150);   // small delay feels more natural
+    setTimeout(expand, 150);
   });
 
   pill.addEventListener("click", () => {
@@ -289,24 +282,22 @@ function createToggleButton(site) {
       return;
     }
 
-    collapse();                // shrink before opening
+    collapse();
     setTimeout(() => {
       openFloatingPopup();
       isOpen = true;
-    }, 300);                   // let collapse finish first
+    }, 300);
   });
 }
 
 // ─── REFRESH TOGGLE COUNTS ────────────────────────────────────────────────────
 
 function refreshToggleCounts(site) {
-  const pill     = document.getElementById("webnote-toggle");
+  const pill = document.getElementById("webnote-toggle");
   if (!pill) return;
 
-  // countsEl is the last span child, divider is the middle one
-  const children  = pill.querySelectorAll("span");
-  const divider   = children[0];
-  const countsEl  = children[1];
+  const divider  = document.getElementById("webnote-divider");
+  const countsEl = document.getElementById("webnote-counts");
   if (!countsEl) return;
 
   const priorityConfig = [
@@ -322,7 +313,6 @@ function refreshToggleCounts(site) {
       .map(({ key, color }) => ({ count: (data[key] || []).length, color }))
       .filter(({ count }) => count > 0);
 
-    // Clear and rebuild counts
     countsEl.innerHTML = "";
 
     if (entries.length === 0) {
@@ -336,8 +326,12 @@ function refreshToggleCounts(site) {
     entries.forEach(({ count, color }, i) => {
       const dot = document.createElement("span");
       Object.assign(dot.style, {
-        width: "8px", height: "8px", borderRadius: "50%",
-        background: color, display: "inline-block", flexShrink: "0",
+        width:        "8px",
+        height:       "8px",
+        borderRadius: "50%",
+        background:   color,
+        display:      "inline-block",
+        flexShrink:   "0",
       });
 
       const num = document.createElement("span");
@@ -355,7 +349,6 @@ function refreshToggleCounts(site) {
       }
     });
 
-    // Ensure pill is expanded to show counts
     pill.style.maxWidth    = "200px";
     pill.style.padding     = "6px 10px 6px 6px";
     if (divider) divider.style.opacity = "1";
