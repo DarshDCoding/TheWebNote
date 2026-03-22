@@ -17,7 +17,7 @@ export const deleteNote = (e, url, fallbackFunction) => {
       taskCard.remove();
 
       const remainingNotes = document.querySelectorAll(".task-card");
-      remainingNotes.length === 0 && RenderNothingToShow;
+      remainingNotes.length === 0 && RenderNothingToShow();
 
       chrome.runtime.sendMessage(
         { action: "DELETE_NOTE", url: url, id: noteId },
