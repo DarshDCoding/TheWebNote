@@ -13,7 +13,7 @@ import {
   RenderLookingToShow,
   RenderNothingToShow,
 } from "./utils/render.js";
-import { addGlobalEventListner } from "./utils/events.js";
+import { addGlobalEventListner, initImageViewer } from "./utils/events.js";
 import { extractPriorityFromText } from "./utils/helpers.js";
 import {
   getIsEditing,
@@ -191,7 +191,12 @@ addGlobalEventListner("click", ".btn-edit", (e) => {
   enterEditMode(note);
 });
 
+addGlobalEventListner("click", ".note-image-view", (e) => {
+  window.open(e.target.dataset.src, "_blank");
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadNotes();
+initImageViewer();
 setTimeout(() => taskInputField.focus(), 100);
 initTheme();

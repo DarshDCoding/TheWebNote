@@ -16,16 +16,18 @@ export const renderElement = (note, context = "popup") => {
   return `
     <div class="task-card priority-${note.priority}${isDashboard ? " dashboard-note" : ""}">
 
-        ${note.img ? `<img src="${note.img}" alt="Task Image" class="task-image">` : ""}
+${note.img ? `<img src="${note.img}" alt="Task Image" class="task-image note-image-view" data-src="${note.img}">` : ""}
         <div class="task-content">
             <p class="task-desc">${note.note}</p>
             <div class="task-footer">
                 <p class="btn-action date">${note.createdAt}</p>
                 <div class="btn-actions">
-                  ${!isDashboard
-                    ? `<button class="btn-action btn-edit" data-id="${note.id}">Edit</button>`
-                    : ""}
-                  <button class="btn-action btn-delete" data-id="${note.id}" data-url="${note._url || ''}">Delete</button>
+                  ${
+                    !isDashboard
+                      ? `<button class="btn-action btn-edit" data-id="${note.id}">Edit</button>`
+                      : ""
+                  }
+                  <button class="btn-action btn-delete" data-id="${note.id}" data-url="${note._url || ""}">Delete</button>
                 </div>
             </div>
         </div>
@@ -38,13 +40,12 @@ export const renderElement = (note, context = "popup") => {
 export const RenderNotes = (
   data = { important: [], medium: [], normal: [] },
 ) => {
-
   // Normalise data
   data = {
     important: [],
-    medium:    [],
-    normal:    [],
-    ...(data || {})
+    medium: [],
+    normal: [],
+    ...(data || {}),
   };
 
   const order = ["important", "medium", "normal"];
@@ -59,7 +60,7 @@ export const RenderNotes = (
     .map((priority) =>
       [...data[priority]]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .map((note) => renderElement(note, "popup"))   // explicit context
+        .map((note) => renderElement(note, "popup")) // explicit context
         .join(""),
     )
     .join("");
@@ -71,10 +72,10 @@ export const RenderNotes = (
 
 const StylingTaskContainer = () => {
   const taskContainer = document.getElementById("task-container");
-  taskContainer.style.display        = "flex";
+  taskContainer.style.display = "flex";
   taskContainer.style.justifyContent = "center";
-  taskContainer.style.alignItems     = "center";
-  taskContainer.style.flexDirection  = "column";
+  taskContainer.style.alignItems = "center";
+  taskContainer.style.flexDirection = "column";
   return taskContainer;
 };
 
