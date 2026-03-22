@@ -172,8 +172,8 @@ Click **Dashboard** in the popup to open the full dashboard in a new tab. It sho
 ## 🗂️ Project Structure
 
 ```
-TheWebNote/                     # outer folder (created by ZIP extraction)
-└── TheWebNote/                 # inner folder — load THIS into Chrome
+
+ TheWebNote/                 # Load THIS into Chrome
     │
     ├── manifest.json           # Extension config (MV3)
     ├── background.js           # Service worker — IndexedDB + message router
