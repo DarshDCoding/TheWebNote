@@ -5,13 +5,13 @@
   "version": "1.1.0",
 
   "action": {
-      "default_popup": "index.html",
-      "default_title": "TheWebNote",
-          "default_icon": {
+    "default_popup": "index.html",
+    "default_title": "TheWebNote",
+    "default_icon": {
       "16": "assets/icons/icon128.png",
       "32": "assets/icons/icon128.png",
       "48": "assets/icons/icon128.png",
-      "128":"assets/icons/icon128.png"
+      "128": "assets/icons/icon128.png"
     }
   },
 
@@ -21,18 +21,9 @@
 
   "options_page": "dashboard/dashboard.html",
 
-  "permissions": [
-    "storage",
-    "activeTab",
-    "tabs",
-    "scripting"
-  ],
+  "permissions": ["storage", "activeTab", "tabs", "scripting"],
 
-  "host_permissions": [
-    "<all_urls>",
-    "http://*/*",
-    "https://*/*"
-  ],
+  "host_permissions": ["<all_urls>", "http://*/*", "https://*/*"],
 
   "content_scripts": [
     {
@@ -45,24 +36,35 @@
     "16": "assets/icons/icon128.png",
     "32": "assets/icons/icon128.png",
     "48": "assets/icons/icon128.png",
-    "128":"assets/icons/icon128.png"
+    "128": "assets/icons/icon128.png"
   },
 
-"web_accessible_resources": [
-  {
-    "resources": [
-      "assets/icons/*",
-      "assets/svgs/*",
-      "index.html",
-      "style.css",
-      "darkMode.css",
-      "popup.js",
-      "utils/*",
-      "dashboard/dashboard.html",
-      "dashboard/dashboard.css",
-      "dashboard/dashboard.js"
-    ],
-    "matches": ["<all_urls>"]
-  }
-]
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/icons/*",
+        "assets/svgs/*",
+        "index.html",
+        "style.css",
+        "darkMode.css",
+        "popup.js",
+
+        "utils/date.js",
+        "utils/events.js",
+        "utils/helpers.js",
+        "utils/imageHandler.js",
+        "utils/inputProcess.js",
+        "utils/editHandler.js",
+        "utils/noteService.js",
+        "utils/render.js",
+        "utils/toggleDark.js",
+        "utils/urls.js",
+        
+        "dashboard/dashboard.html",
+        "dashboard/dashboard.css",
+        "dashboard/dashboard.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
