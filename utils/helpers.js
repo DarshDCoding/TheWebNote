@@ -27,17 +27,53 @@ export function extractPriorityFromText(raw) {
   return { noteText: raw, priority: "normal" };
 }
 
-// /**
-//  * Converts a File object to a base64 data-URL string.
-//  *
-//  * @param {File} file
-//  * @returns {Promise<string>} base64 data-URL
-//  */
+
+
+const MAX_DIMENSION = 1200;
+
 export function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result);
+
     reader.onerror = () => reject(new Error("Failed to read file"));
+
+    reader.onload = () => {
+      const img = new Image();
+
+      img.onerror = () => reject(new Error("Failed to load image"));
+
+      img.onload = () => {
+        // ── Calculate new dimensions ──
+        let { width, height } = img;
+
+        if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+          if (width > height) {
+            height = Math.round((height / width) * MAX_DIMENSION);
+            width  = MAX_DIMENSION;
+          } else {
+            width  = Math.round((width / height) * MAX_DIMENSION);
+            height = MAX_DIMENSION;
+          }
+        }
+
+        // ── Draw onto canvas ──
+        const canvas    = document.createElement("canvas");
+        canvas.width    = width;
+        canvas.height   = height;
+        const ctx       = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // ── Export: JPEG at 0.75, PNG as-is ──
+        const isPNG    = file.type === "image/png";
+        const mimeType = isPNG ? "image/png" : "image/jpeg";
+        const quality  = isPNG ? undefined : 0.75;
+
+        resolve(canvas.toDataURL(mimeType, quality));
+      };
+
+      img.src = reader.result;
+    };
+
     reader.readAsDataURL(file);
   });
 }
