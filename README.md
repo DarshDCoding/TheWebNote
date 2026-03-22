@@ -4,7 +4,7 @@
 
 The web has no memory — until now. Leave notes on any website and find them waiting, right where they belong.
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.1-blue)
 ![License](https://img.shields.io/badge/license-GPL--v3-blue)
 ![Chrome](https://img.shields.io/badge/browser-Chrome%2088+-orange)
 ![Manifest](https://img.shields.io/badge/manifest-V3-purple)
@@ -22,8 +22,9 @@ The web has no memory — until now. Leave notes on any website and find them wa
 - 📌 Add notes to any website while browsing
 - ✏️ Edit existing notes — update text, image, or priority at any time
 - 🔴🟡⚫ Three priority levels — **Important**, **Medium**, **Normal**
-- 🖼️ Attach images to your notes
+- 🖼️ Attach images to your notes — click any image to view it full size in a new tab
 - 🔔 Floating toggle button appears automatically on sites that have notes
+- 🙈 Toggle pill hides automatically during fullscreen (videos, games, etc.) and restores on exit
 - 📂 Central dashboard to view, manage and delete notes across all sites
 - 🌙 Dark mode with persistent preference
 - 🔒 100% local — your data never leaves your device
@@ -157,8 +158,11 @@ Click the **Edit** button on any note card in the popup to enter edit mode.
 
 > **Note:** The Edit button is only available in the popup. It does not appear on note cards in the Dashboard view.
 
+### Viewing a note image
+Click on any image attached to a note — in either the popup or the dashboard — to open it full size in a new tab.
+
 ### Floating toggle pill
-When you visit a site that has saved notes, a pill-shaped button appears in the bottom-right corner. It shows the count of notes per priority. Clicking it opens the popup as a floating iframe over the page.
+When you visit a site that has saved notes, a pill-shaped button appears in the bottom-right corner. It shows the count of notes per priority. Clicking it opens the popup as a floating iframe over the page. The pill automatically hides when the page enters fullscreen mode and reappears when fullscreen exits.
 
 ### Dashboard
 Click **Dashboard** in the popup to open the full dashboard in a new tab. It shows all notes grouped by website. Each site card displays notes in a horizontal grid (min 300px per card). Up to 5 notes are shown by default with a **Show all** toggle for the rest.
@@ -189,15 +193,15 @@ TheWebNote/                     # outer folder (created by ZIP extraction)
     │
     ├── utils/
     │   ├── date.js             # Date/time formatting
-    │   ├── events.js           # Global event delegation helper
-    │   ├── helpers.js          # Shared pure helpers (priority parsing, file conversion)
+    │   ├── events.js           # Global event delegation helper + image viewer init
+    │   ├── helpers.js          # Shared pure helpers (priority parsing, image compression)
     │   ├── imageHandler.js     # Image preview in popup
     │   ├── inputProcess.js     # Parses note input + priority tags
     │   ├── editHandler.js      # Edit mode UI state (enter, reset, image removal)
     │   ├── noteService.js      # Delete + update note handlers (popup)
     │   ├── render.js           # renderElement + RenderNotes
     │   ├── toggleDark.js       # Dark mode toggle (shared by popup + dashboard)
-    │   └── urls.js             # Active tab URL helpers
+    │   └── urls.js             # Active tab URL helpers (Promise-based)
     │
     └── assets/
         ├── icons/
@@ -230,7 +234,7 @@ Each note object:
 {
   id:        string   // crypto.randomUUID()
   note:      string   // note text
-  img:       string   // base64 image (or null)
+  img:       string   // base64 image, compressed and resized to max 1200px (or null)
   priority:  string   // "important" | "medium" | "normal"
   createdAt: string   // formatted date string
   status:    string   // "pending"
@@ -267,6 +271,10 @@ The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, prio
 - **Priority syntax** — parsed in `utils/inputProcess.js` (add) and `utils/helpers.js` (edit) by reading the last 4 characters of the input
 - **Edit state** — all edit UI state lives in `utils/editHandler.js`; `popup.js` delegates to it entirely, keeping concerns separated
 - **No extra fetch on edit** — the note to edit is looked up directly from the local in-memory cache in `popup.js`, so edit mode is instant with no network round-trip
+- **Active tab URL** — `utils/urls.js` exports a Promise (`activeTabUrlPromise`) instead of a plain string to eliminate a race condition where the URL could be empty when the first note is saved
+- **Image compression** — images are resized to a max of 1200px and compressed via canvas before storing: JPEG at 0.75 quality, PNG lossless resize only
+- **Image viewer** — clicking a note image opens it full size in a new tab via a temporary blob URL; direct data URLs are blocked by Chrome's CSP
+- **Fullscreen hide** — the toggle pill listens for `fullscreenchange` on `document` and sets `display: none` on enter, `display: flex` on exit
 
 ---
 
@@ -276,8 +284,7 @@ The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, prio
 - **Uninstalling the extension deletes all data** — Chrome wipes all IndexedDB data scoped to the extension when it is uninstalled. Reinstalling will not recover your notes. Export your data before uninstalling once the export feature is available
 - **Chrome only** — Manifest V3 implementation differs between browsers; Firefox and Safari are not currently supported
 - **`autofocus` blocked in iframe** — Chrome blocks autofocus on inputs inside cross-origin iframes, so the popup input is focused manually via `setTimeout` instead
-- **Image storage** — images are stored as base64 strings in IndexedDB. Very large images may slow down reads. Compression is not applied currently
-- **Edit is popup-only** — notes can be edited from the popup but not from the Dashboard view
+- **Legacy uncompressed images** — images attached to notes before v1.1.1 are stored at full base64 size in IndexedDB. They will not be retroactively compressed. Re-attaching the image on an edit will compress it going forward
 
 ---
 
@@ -319,6 +326,12 @@ A: Not currently. TheWebNote uses Chrome's Manifest V3 APIs which behave differe
 **Q: Does TheWebNote send any data to a server?**
 A: No. All notes are stored entirely on your device in IndexedDB. No data is ever sent to any external server. The only network request the extension makes is fetching website favicons from Google's favicon service for display in the dashboard.
 
+**Q: The toggle pill disappeared and isn't coming back.**
+A: If the page is in fullscreen mode, the pill hides automatically. Exit fullscreen and it will reappear immediately.
+
+**Q: I added a note but it never appeared anywhere.**
+A: This was a rare race condition in versions before v1.1.1 where the active tab URL hadn't resolved yet when the note was saved. This is fixed in v1.1.1 — update to the latest version using the update script.
+
 ---
 
 ## 🛡️ Trust & Security
@@ -353,8 +366,6 @@ TheWebNote is fully open source. Every line of code is readable in this reposito
 
 ---
 
-
-
 TheWebNote is designed with privacy as a core principle:
 
 - All note data is stored locally in your browser's **IndexedDB** — it never leaves your device
@@ -367,9 +378,12 @@ TheWebNote is designed with privacy as a core principle:
 
 ## 🚧 Planned Features
 
-- 📄 **Extract text from web pages** — select text on any page and save it directly as a note
 - 📤 **Export notes** — download your note data in JSON, Markdown, plain text, or PDF format
 - 📥 **Import notes** — import previously exported data with automatic duplicate detection and conflict resolution
+- 📄 **Extract text from web pages** — select text on any page and save it directly as a note
+- 🖼️ **Drag and drop images** — drag an image directly into the input field to attach it to a note
+- 📸 **Screenshot webpage** — capture the current page and insert it directly as a note image
+- 🖱️ **Draggable toggle pill** — drag the pill to any corner of the screen with position saved across sessions
 - 🔁 **Sync across devices** — share notes between multiple machines
 - 🎨 **Canvas drawing** — sketch and save drawings directly inside a note
 
