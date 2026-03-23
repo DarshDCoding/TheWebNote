@@ -1,4 +1,3 @@
-// ── utils/exporters/exportJSON.js ─────────────────────────────────────────────
 import { downloadFile, getJSONFilename } from "./exportHelpers.js";
 
 export function generateJSON(filteredData, selectedSites) {

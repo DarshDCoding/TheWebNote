@@ -1,4 +1,3 @@
-// ── utils/exporters/exportPDF.js ──────────────────────────────────────────────
 import { getFilename } from "./exportHelpers.js";
 
 // ── Fetch extension logo as base64 ───────────────────────────────────────────

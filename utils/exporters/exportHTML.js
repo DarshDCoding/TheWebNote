@@ -1,15 +1,26 @@
-// ── utils/exporters/exportHTML.js ─────────────────────────────────────────────
 import { downloadFile, getFilename } from "./exportHelpers.js";
 
-export function generateHTML(filteredData, selectedSites) {
-  const filename = getFilename(selectedSites, "html");
+async function getLogoBase64() {
+  const url      = chrome.runtime.getURL("assets/icons/icon128.png");
+  const response = await fetch(url);
+  const blob     = await response.blob();
+  return new Promise((resolve) => {
+    const reader  = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+export async function generateHTML(filteredData, selectedSites) {
+  const filename   = getFilename(selectedSites, "html");
+  const logoBase64 = await getLogoBase64();
 
   const cards = filteredData.map(({ url, data }) => {
     const notes = ["important", "medium", "normal"].flatMap((priority) =>
       (data[priority] || []).map((note) => `
         <div class="note priority-${priority}">
           ${note.img ? `<img src="${note.img}" alt="note image">` : ""}
-          <p class="note-text">${note.note || "N/A"}</p>
+          <p class="note-text">${note.note?.trim() || "N/A"}</p>
           <div class="note-footer">
             <span class="priority-tag">${priority.toUpperCase()}</span>
             <span class="note-date">${note.createdAt}</span>
@@ -19,7 +30,12 @@ export function generateHTML(filteredData, selectedSites) {
     ).join("");
     return `
       <div class="site-section">
-        <h2>${url}</h2>
+        <a class="site-heading" href="https://${url}" target="_blank" rel="noopener noreferrer">
+          <img src="https://www.google.com/s2/favicons?domain=${url}&sz=32" 
+               onerror="this.style.display='none'" 
+               style="width:16px;height:16px;border-radius:3px;object-fit:contain;">
+          ${url}
+        </a>
         <div class="notes-grid">${notes}</div>
       </div>
     `;
@@ -31,31 +47,126 @@ export function generateHTML(filteredData, selectedSites) {
   <meta charset="UTF-8">
   <title>TheWebNote Export</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; padding: 40px; }
-    header { background: #3b82f6; color: #fff; padding: 16px 40px; margin: -40px -40px 40px; display: flex; justify-content: space-between; align-items: center; }
-    header h1 { font-size: 20px; margin: 0; }
+
+    /* Header */
+    header {
+      background: #3b82f6;
+      color: #fff;
+      padding: 16px 40px;
+      margin: -40px -40px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-left img {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      object-fit: contain;
+    }
+    header h1 { font-size: 20px; font-weight: 800; }
     header span { font-size: 13px; opacity: 0.85; }
-    h2 { font-size: 18px; margin-bottom: 16px; color: #3b82f6; }
+
+    /* Site section */
     .site-section { margin-bottom: 40px; }
-    .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-    .note { border-radius: 12px; padding: 16px; border: 2px solid #e2e8f0; background: #fff; }
-    .note img { width: 100%; border-radius: 8px; margin-bottom: 10px; object-fit: cover; max-height: 160px; }
-    .note-text { font-size: 14px; margin-bottom: 12px; }
-    .note-footer { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; }
+    .site-heading {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #3b82f6;
+      text-decoration: none;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      width: 100%;
+    }
+    .site-heading:hover { color: #2563eb; }
+
+    /* Notes grid */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    /* Note card */
+    .note {
+      border-radius: 12px;
+      padding: 16px;
+      border: 2px solid #e2e8f0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .note img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      max-height: 200px;
+      cursor: pointer;
+    }
+    .note-text { font-size: 14px; line-height: 1.6; flex: 1; }
+    .note-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #94a3b8;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
     .priority-tag { font-weight: 700; }
+
+    /* Priority variants */
     .priority-important { border-color: #ef4444; background: #fef2f2; }
+    .priority-important .priority-tag { color: #ef4444; }
     .priority-medium { border-color: #eab308; background: #fefce8; }
+    .priority-medium .priority-tag { color: #eab308; }
     .priority-normal { border-color: #e2e8f0; background: #fff; }
-    footer { margin-top: 60px; text-align: center; font-size: 12px; color: #94a3b8; }
+    .priority-normal .priority-tag { color: #64748b; }
+
+    /* Footer */
+    footer {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 2px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    footer a { color: #3b82f6; text-decoration: none; font-weight: 600; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <header>
-    <h1>📝 TheWebNote</h1>
+    <div class="header-left">
+      <img src="${logoBase64}" alt="TheWebNote">
+      <h1>TheWebNote</h1>
+    </div>
     <span>Exported on ${new Date().toLocaleDateString()}</span>
   </header>
+
   ${cards}
-  <footer>Generated by TheWebNote — your notes, your device.</footer>
+
+  <footer>
+    <span>Generated by TheWebNote — your notes, your device.</span>
+    <a href="https://github.com/darshdcoding" target="_blank" rel="noopener noreferrer">
+      Powered by DarshDCoding
+    </a>
+  </footer>
 </body>
 </html>`;
 

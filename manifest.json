@@ -63,7 +63,6 @@
         "utils/exportModal.js",
         "utils/exporter.js",
 
-        "utils/exporters/exportHelpers.js",
         "utils/exporters/exportJSON.js",
         "utils/exporters/exportMD.js",
         "utils/exporters/exportHTML.js",

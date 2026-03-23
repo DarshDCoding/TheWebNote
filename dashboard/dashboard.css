@@ -413,6 +413,65 @@ header {
   border-top: 1.5px solid #f1f5f9;
 }
 
+/* ── Format badges ── */
+.format-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.badge-recommended {
+  background: #fefce8;
+  color: #854d0e;
+  border: 1px solid #eab308;
+}
+
+.badge-reading {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.badge-archive {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #3b82f6;
+}
+
+/* ── JSON info row ── */
+.format-json-info {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: default;
+}
+
+/* ── Dark mode ── */
+[data-theme="dark"] .badge-recommended {
+  background: #2d2510;
+  color: #fde68a;
+  border-color: #eab308;
+}
+[data-theme="dark"] .badge-reading {
+  background: #2d1515;
+  color: #fca5a5;
+  border-color: #ef4444;
+}
+[data-theme="dark"] .badge-archive {
+  background: #1e3a5f;
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+[data-theme="dark"] .format-json-info {
+  background: #0f172a;
+  border-color: #334155;
+}
+
 /* Dark mode overrides */
 [data-theme="dark"] .modal-card {
   background: #1e293b;
