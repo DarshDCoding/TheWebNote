@@ -181,6 +181,37 @@ function renderDashboard(sites) {
   sites.forEach(({ url, data }) => container.appendChild(buildSiteCard(url, data)));
 }
 
+// ── Auto Backup UI (Basic Interaction Only) ───────────────────────────
+
+const autoBackupContainer = document.getElementById("autoBackupContainer");
+const autoBackupToggle = document.getElementById("autoBackupToggle");
+const backupIntervalValue = document.getElementById("backupIntervalValue");
+const changeIntervalBtn = document.getElementById("changeIntervalBtn");
+const openDownloadSettings = document.getElementById("openDownloadSettings");
+
+// ── Toggle expand/collapse
+autoBackupToggle.addEventListener("change", () => {
+  if (autoBackupToggle.checked) {
+    autoBackupContainer.classList.add("active");
+  } else {
+    autoBackupContainer.classList.remove("active");
+  }
+});
+
+// ── Mock interval change (cycles through options)
+const intervals = [3, 6, 9, 12, 24];
+let currentIndex = 1; // default = 6 hours
+
+changeIntervalBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % intervals.length;
+  backupIntervalValue.textContent = `${intervals[currentIndex]} hours`;
+});
+
+// ── Open Chrome download settings
+openDownloadSettings.addEventListener("click", () => {
+  chrome.tabs.create({ url: "chrome://settings/downloads" });
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 initTheme();

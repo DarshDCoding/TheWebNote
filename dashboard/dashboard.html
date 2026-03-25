@@ -33,6 +33,46 @@
         <button class="btn btn-back" id="backBtn">Back</button>
         <button class="btn btn-export" id="exportBtn">Export</button>
       </div>
+      <!-- Auto Backup (Header Right) -->
+      <div class="auto-backup-container" id="autoBackupContainer">
+        <!-- Collapsed Header -->
+        <div class="auto-backup-header">
+          <span class="auto-backup-title">Auto Backup</span>
+
+          <label class="auto-backup-toggle">
+            <input type="checkbox" id="autoBackupToggle" />
+            <span class="auto-backup-slider"></span>
+          </label>
+        </div>
+
+        <!-- Expandable Panel -->
+        <div class="auto-backup-panel" id="autoBackupPanel">
+          <div class="auto-backup-panel-inner">
+            <div class="auto-backup-row">
+              <span class="label">Last Backup</span>
+              <span class="value" id="lastBackupValue">Never</span>
+            </div>
+
+            <div class="auto-backup-row">
+              <span class="label">Backup Interval</span>
+              <div class="value action">
+                <span id="backupIntervalValue">6 hours</span>
+                <button class="mini-btn" id="changeIntervalBtn">Change</button>
+              </div>
+            </div>
+
+            <div class="auto-backup-row">
+              <span class="label">Chrome Downloads</span>
+              <div class="value action">
+                <span>Managed by Chrome</span>
+                <button class="mini-btn" id="openDownloadSettings">
+                  Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
     <main class="sites-container" id="dashboard-container"></main>
