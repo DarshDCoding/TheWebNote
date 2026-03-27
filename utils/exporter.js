@@ -14,6 +14,7 @@ import {
   ZIP_README,
 } from "./exporters/exportHelpers.js";
 import { sendMessage } from "./messaging.js";
+import { PRIORITIES } from "./constants.js";
 
 // ── Generate shared images ZIP ────────────────────────────────────────────────
 async function generateImages(filteredData, selectedSites) {
@@ -21,7 +22,7 @@ async function generateImages(filteredData, selectedSites) {
   let   hasImages = false;
 
   filteredData.forEach(({ url, data }) => {
-    ["important", "medium", "normal"].forEach((priority) => {
+    PRIORITIES.forEach((priority) => {
       let cardNumber = 1;
       (data[priority] || []).forEach((note) => {
         if (note.img) {

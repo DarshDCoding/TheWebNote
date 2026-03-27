@@ -1,14 +1,16 @@
 // // ── utils/render.js ───────────────────────────────────────────────────────────
 
-// /**
-//  * Renders a single note card.
-//  *
-//  * The Edit button carries `data-id` only; it is hidden automatically when the
-//  * card is rendered inside the dashboard by the `.dashboard-note` class added
-//  * via the `context` parameter.
-//  *
-//  * @param {object}  note
-//  * @param {string}  [context="popup"]  - pass "dashboard" to suppress Edit btn
+import { PRIORITIES, EMPTY_SITE_DATA } from "./constants.js";
+
+/**
+ * Renders a single note card.
+ *
+ * The Edit button carries `data-id` only; it is hidden automatically when the
+ * card is rendered inside the dashboard by the `.dashboard-note` class added
+ * via the `context` parameter.
+ *
+ * @param {object}  note
+ * @param {string}  [context="popup"]  - pass "dashboard" to suppress Edit btn
 //  */
 export const renderElement = (note, context = "popup") => {
   const isDashboard = context === "dashboard";
@@ -38,25 +40,22 @@ ${note.img ? `<img src="${note.img}" alt="Task Image" class="task-image note-ima
 // ── RenderNotes (popup) ───────────────────────────────────────────────────────
 
 export const RenderNotes = (
-  data = { important: [], medium: [], normal: [] },
+  data = { ...EMPTY_SITE_DATA },
 ) => {
   // Normalise data
   data = {
-    important: [],
-    medium: [],
-    normal: [],
+    ...EMPTY_SITE_DATA,
     ...(data || {}),
   };
 
-  const order = ["important", "medium", "normal"];
-  const notes = order.flatMap((priority) => data[priority]);
+  const notes = PRIORITIES.flatMap((priority) => data[priority]);
 
   if (notes.length === 0) {
     RenderNothingToShow();
     return;
   }
 
-  const html = order
+  const html = PRIORITIES
     .map((priority) =>
       [...data[priority]]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

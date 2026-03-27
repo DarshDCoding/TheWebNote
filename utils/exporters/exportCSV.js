@@ -1,11 +1,12 @@
 import { downloadFile, getFilename, getImageFilename } from "./exportHelpers.js";
+import { PRIORITIES } from "../constants.js";
 
 export function generateCSV(filteredData, selectedSites) {
   const filename = getFilename(selectedSites, "csv");
   const rows     = [["site", "priority", "note", "createdAt", "image_file"]];
 
   filteredData.forEach(({ url, data }) => {
-    ["important", "medium", "normal"].forEach((priority) => {
+    PRIORITIES.forEach((priority) => {
       let cardNumber = 1;
       (data[priority] || []).forEach((note) => {
         let imageFile = "N/A";

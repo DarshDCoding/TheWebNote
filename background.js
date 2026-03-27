@@ -1,4 +1,8 @@
+const PRIORITIES      = ["important", "medium", "normal"];
+const EMPTY_SITE_DATA = { important: [], medium: [], normal: [] };
+
 // OPEN DATABASE
+
 let db;
 
 const request = indexedDB.open("TheWebNoteDB", 1);
@@ -37,11 +41,7 @@ function getSiteNotes(url) {
     const req = store.get(url);   // O(1) lookup
 
     req.onsuccess = () => {
-      resolve(req.result || {
-        important: [],
-        medium: [],
-        normal: []
-      });
+      resolve(req.result || { ...EMPTY_SITE_DATA });
     };
 
     req.onerror = () => reject(req.error);
@@ -87,9 +87,7 @@ function deleteNote (url, noteId) {
 
       const siteData = await getSiteNotes(url);
 
-      const priorities = ["important", "medium", "normal"];
-
-      for (const priority of priorities) {
+      for (const priority of PRIORITIES) {
 
         const index = siteData[priority].findIndex(
           note => note.id === noteId
@@ -137,14 +135,13 @@ function updateNote(url, noteId, updates) {
   return new Promise(async (resolve, reject) => {
     try {
       const siteData   = await getSiteNotes(url);
-      const priorities = ["important", "medium", "normal"];
 
       let foundNote     = null;
       let oldPriority   = null;
       let foundIndex    = -1;
 
       // ── Find the note ──
-      for (const priority of priorities) {
+      for (const priority of PRIORITIES) {
         const idx = siteData[priority].findIndex(n => n.id === noteId);
         if (idx !== -1) {
           foundNote   = siteData[priority][idx];

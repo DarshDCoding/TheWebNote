@@ -3,6 +3,7 @@ import { renderElement }         from "../utils/render.js";
 import { addGlobalEventListner, initImageViewer } from "../utils/events.js";
 import { initExportModal } from "../utils/exportModal.js";
 import { sendMessage } from "../utils/messaging.js";
+import { PRIORITIES } from "../utils/constants.js";
 
 const container = document.getElementById("dashboard-container");
 document.getElementById("backBtn").addEventListener("click", () => window.close());
@@ -12,10 +13,7 @@ document.getElementById("backBtn").addEventListener("click", () => window.close(
 const MAX_VISIBLE = 5;
 
 function buildSiteCard(url, data) {
-  const order = ["important", "medium", "normal"];
-
-  // Stamp _url on each note so the global delete handler knows which site
-  const allNotes = order.flatMap(p =>
+  const allNotes = PRIORITIES.flatMap(p =>
     [...(data[p] || [])]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map(note => ({ ...note, _url: url }))
@@ -541,10 +539,7 @@ async function handleSilentAutoBackup() {
     // Run the backup — this also saves timestamps and broadcasts BACKUP_COMPLETED
     const updated = await runAutoBackup();
 
-    // Re-schedule the alarm so the loop continues reliably.
-    // Chrome's periodic alarm should already do this, but re-creating it here
-    // ensures the interval is always fresh from the latest saved prefs and
-    // recovers from any edge case where the alarm was cleared.
+
     await scheduleAlarm(updated.intervalHours);
 
   } catch (err) {

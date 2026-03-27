@@ -1,4 +1,5 @@
 import { getFilename } from "./exportHelpers.js";
+import { PRIORITIES } from "../constants.js";
 
 // ── Fetch extension logo as base64 ───────────────────────────────────────────
 async function getLogoBase64() {
@@ -212,7 +213,7 @@ export async function generatePDF(filteredData, selectedSites) {
   const allSections = [];
   for (const { url, data } of filteredData) {
     const notes = [];
-    for (const priority of ["important", "medium", "normal"]) {
+    for (const priority of PRIORITIES) {
       for (const note of (data[priority] || [])) {
         notes.push({ note, priority });
       }

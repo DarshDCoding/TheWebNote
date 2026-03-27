@@ -1,3 +1,10 @@
+// PRIORITY_COLORS is mirrored here from utils/constants.js — keep both in sync.
+const PRIORITY_COLORS = [
+  { key: "important", color: "#ef4444" },
+  { key: "medium",    color: "#eab308" },
+  { key: "normal",    color: "#64748b" },
+];
+
 // INIT
 initSmartToggle();
 
@@ -131,12 +138,6 @@ function createToggleButton(site) {
 
   injectStyles();
 
-  const priorityConfig = [
-    { key: "important", color: "#ef4444" },
-    { key: "medium",    color: "#eab308" },
-    { key: "normal",    color: "#64748b" },
-  ];
-
   const pill = document.createElement("div");
   pill.id = "webnote-toggle";
   Object.assign(pill.style, {
@@ -230,7 +231,7 @@ function createToggleButton(site) {
   safeSendMessage({ action: "GET_NOTES", url: site }, (data) => {
     if (!data) return;
 
-    const entries = priorityConfig
+    const entries = PRIORITY_COLORS
       .map(({ key, color }) => ({ count: (data[key] || []).length, color }))
       .filter(({ count }) => count > 0);
 
@@ -300,16 +301,10 @@ function refreshToggleCounts(site) {
   const countsEl = document.getElementById("webnote-counts");
   if (!countsEl) return;
 
-  const priorityConfig = [
-    { key: "important", color: "#ef4444" },
-    { key: "medium",    color: "#eab308" },
-    { key: "normal",    color: "#64748b" },
-  ];
-
   safeSendMessage({ action: "GET_NOTES", url: site }, (data) => {
     if (!data) return;
 
-    const entries = priorityConfig
+    const entries = PRIORITY_COLORS
       .map(({ key, color }) => ({ count: (data[key] || []).length, color }))
       .filter(({ count }) => count > 0);
 

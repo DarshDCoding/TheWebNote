@@ -24,6 +24,7 @@ import {
   resetEditMode,
   handleSecondaryBtnClick,
 } from "./utils/editHandler.js";
+import { PRIORITIES, EMPTY_SITE_DATA } from "./utils/constants.js";
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
 const addTaskBtn = document.getElementById("addTask");
@@ -32,7 +33,7 @@ const taskInputField = document.getElementById("taskInputField");
 const dashboardBtn = document.getElementById("dashboardBtn");
 
 // ── Shared note data cache ────────────────────────────────────────────────────
-let data = { important: [], medium: [], normal: [] };
+let data = { ...EMPTY_SITE_DATA };
 
 // ── Image input ───────────────────────────────────────────────────────────────
 inputImage.addEventListener("change", (event) => {
@@ -110,7 +111,7 @@ async function handleSaveEdit() {
   } else {
     // No text — keep existing priority; we need it from stored data
     // Find the note in the local cache to retrieve its current priority
-    const allNotes = [...data.important, ...data.medium, ...data.normal];
+    const allNotes = PRIORITIES.flatMap(p => data[p]);
     const existing = allNotes.find((n) => n.id === noteId);
     priority = existing?.priority || "normal";
   }
@@ -179,7 +180,7 @@ addGlobalEventListner("click", ".btn-edit", (e) => {
   const noteId = btn.dataset.id;
 
   // Find the note in the local cache — no extra network call needed
-  const allNotes = [...data.important, ...data.medium, ...data.normal];
+  const allNotes = PRIORITIES.flatMap(p => data[p]);
   const note = allNotes.find((n) => n.id === noteId);
 
   if (!note) {

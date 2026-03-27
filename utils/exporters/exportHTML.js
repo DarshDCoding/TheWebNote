@@ -1,4 +1,5 @@
 import { downloadFile, getFilename } from "./exportHelpers.js";
+import { PRIORITIES } from "../constants.js";
 
 async function getLogoBase64() {
   const url      = chrome.runtime.getURL("assets/icons/icon128.png");
@@ -16,7 +17,7 @@ export async function generateHTML(filteredData, selectedSites) {
   const logoBase64 = await getLogoBase64();
 
   const cards = filteredData.map(({ url, data }) => {
-    const notes = ["important", "medium", "normal"].flatMap((priority) =>
+    const notes = PRIORITIES.flatMap((priority) =>
       (data[priority] || []).map((note) => `
         <div class="note priority-${priority}">
           ${note.img ? `<img src="${note.img}" alt="note image">` : ""}

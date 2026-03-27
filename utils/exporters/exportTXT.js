@@ -1,4 +1,5 @@
 import { downloadFile, getFilename, getImageFilename } from "./exportHelpers.js";
+import { PRIORITIES } from "../constants.js";
 
 export function generateTXT(filteredData, selectedSites) {
   const filename = getFilename(selectedSites, "txt");
@@ -6,7 +7,7 @@ export function generateTXT(filteredData, selectedSites) {
 
   filteredData.forEach(({ url, data }) => {
     txt += `${url}\n${"-".repeat(40)}\n\n`;
-    ["important", "medium", "normal"].forEach((priority) => {
+    PRIORITIES.forEach((priority) => {
       let cardNumber = 1;
       (data[priority] || []).forEach((note) => {
         txt += `[${priority.toUpperCase()}]\n`;

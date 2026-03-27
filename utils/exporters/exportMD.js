@@ -1,4 +1,5 @@
 import { downloadFile, getFilename, getImageFilename } from "./exportHelpers.js";
+import { PRIORITIES } from "../constants.js";
 
 export function generateMD(filteredData, selectedSites) {
   const filename = getFilename(selectedSites, "md");
@@ -6,7 +7,7 @@ export function generateMD(filteredData, selectedSites) {
 
   filteredData.forEach(({ url, data }) => {
     md += `## ${url}\n\n`;
-    ["important", "medium", "normal"].forEach((priority) => {
+    PRIORITIES.forEach((priority) => {
       let cardNumber = 1;
       (data[priority] || []).forEach((note) => {
         const noteText = note.note?.trim() || "N/A";
