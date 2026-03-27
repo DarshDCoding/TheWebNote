@@ -13,10 +13,7 @@ import {
   base64ToBlob,
   ZIP_README,
 } from "./exporters/exportHelpers.js";
-
-function sendMessage(msg) {
-  return new Promise((resolve) => chrome.runtime.sendMessage(msg, resolve));
-}
+import { sendMessage } from "./messaging.js";
 
 // ── Generate shared images ZIP ────────────────────────────────────────────────
 async function generateImages(filteredData, selectedSites) {

@@ -2,15 +2,10 @@ import { initTheme } from "../utils/toggleDark.js";
 import { renderElement }         from "../utils/render.js";
 import { addGlobalEventListner, initImageViewer } from "../utils/events.js";
 import { initExportModal } from "../utils/exportModal.js";
+import { sendMessage } from "../utils/messaging.js";
 
 const container = document.getElementById("dashboard-container");
 document.getElementById("backBtn").addEventListener("click", () => window.close());
-
-// ── All DB operations go through background.js via sendMessage ────────────────
-
-function sendMessage(msg) {
-  return new Promise((resolve) => chrome.runtime.sendMessage(msg, resolve));
-}
 
 // ── Build one site card ───────────────────────────────────────────────────────
 

@@ -1,5 +1,6 @@
 // ── utils/exportModal.js ──────────────────────────────────────────────────────
 import { runExport } from "./exporter.js";
+import { sendMessage } from "./messaging.js";
 
 // ── Formats config ────────────────────────────────────────────────────────────
 const FORMATS = [
@@ -85,10 +86,6 @@ const selectAllBtn      = document.getElementById("selectAllBtn");
 const exportConfirmBtn  = document.getElementById("exportConfirmBtn");
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function sendMessage(msg) {
-  return new Promise((resolve) => chrome.runtime.sendMessage(msg, resolve));
-}
-
 function closeExportModal() {
   exportOverlay.classList.remove("is-open");
 }

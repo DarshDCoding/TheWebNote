@@ -64,6 +64,7 @@
         "utils/exporter.js",
 
         "utils/autoBackupExporter.js",
+        "utils/messaging.js",
         "utils/exporters/exportJSON.js",
         "utils/exporters/exportMD.js",
         "utils/exporters/exportHTML.js",

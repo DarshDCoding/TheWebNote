@@ -1,6 +1,7 @@
 // ── utils/autoBackupExporter.js ───────────────────────────────────────────────
 
 import { buildPayload } from "./buildPayload.js";
+import { sendMessage } from "./messaging.js";
 
 const ALARM_NAME = "webnote-auto-backup";
 const FOLDER_NAME = "TheWebNote-Backup";
@@ -59,18 +60,6 @@ export function clearAlarm() {
 }
 
 // ── Backup helpers ────────────────────────────────────────────────────────────
-
-function sendMessage(msg) {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(msg, (response) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-      } else {
-        resolve(response);
-      }
-    });
-  });
-}
 
 function buildTimestamp(date = new Date()) {
   const pad = (n) => String(n).padStart(2, "0");
