@@ -254,10 +254,53 @@ function deleteSite(url) {
   });
 }
 
+
+// ── AUTO BACKUP ALARM LISTENER ────────────────────────────────────────────────
+// When the alarm fires, background.js opens the dashboard in a hidden tab with
+// ?autobackup=1.  The dashboard detects this flag, calls runAutoBackup(), then
+// sends BACKUP_COMPLETED back to background, which broadcasts it to any open
+// dashboard tabs so their countdown resets live.
+
+const AUTO_BACKUP_ALARM = "webnote-auto-backup";
+const AUTO_BACKUP_KEY   = "webnoteAutoBackup";
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name !== AUTO_BACKUP_ALARM) return;
+
+  chrome.storage.local.get(AUTO_BACKUP_KEY, (result) => {
+    const prefs = result[AUTO_BACKUP_KEY];
+    if (!prefs || !prefs.enabled) return;
+
+    // Open dashboard silently in a non-active background tab
+    chrome.tabs.create({
+      url:    chrome.runtime.getURL("dashboard/dashboard.html?autobackup=1"),
+      active: false,
+    });
+  });
+});
+
  
 // MESSAGE ROUTER
  
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+
+  // Silent backup tab reports completion — broadcast to all open dashboard tabs
+  // so their countdown and last-backup UI refreshes live without a page reload.
+  if (request.action === "BACKUP_COMPLETED") {
+    const dashboardUrl = chrome.runtime.getURL("dashboard/dashboard.html");
+    chrome.tabs.query({ url: dashboardUrl }, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, {
+          action:       "BACKUP_COMPLETED",
+          lastBackupAt: request.lastBackupAt,
+          nextBackupAt: request.nextBackupAt,
+          intervalHours: request.intervalHours,
+        }).catch(() => {}); // tab may have closed — ignore
+      });
+    });
+    sendResponse({ ok: true });
+    return;
+  }
 
   // Forward NOTES_UPDATED to the active tab's content script
   if (request.action === "NOTES_UPDATED") {

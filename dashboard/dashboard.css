@@ -77,6 +77,15 @@ header {
   align-items: flex-start;
 }
 
+/* ── Header controls row: nav buttons left, auto backup right ── */
+.header-controls {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
 .dashboard-subtitle {
   font-size: 14px;
   color: var(--color-text-muted);
@@ -515,158 +524,138 @@ header {
   cursor: default;
 }
 
-/* ── Auto Backup (Header Right) ── */
+/* ══════════════════════════════════════════════════════
+   AUTO BACKUP PANEL
+   Floats over content (position absolute), hovers over
+   site tabs below. Matches site-card design language.
+   ══════════════════════════════════════════════════════ */
+
 .auto-backup-container {
   position: absolute;
   right: 5%;
   top: 40px;
   width: 360px;
+  flex-shrink: 0;
   background: var(--primary-white);
   border: 1.5px solid var(--color-border);
-  border-radius: 14px;
-  box-shadow: 0 8px 24px var(--color-shadow-lg);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-  z-index: 10;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px var(--color-shadow-sm);
+  transition: box-shadow 0.25s ease;
+  z-index: 50;
 }
 
 .auto-backup-container:hover {
-  box-shadow: 0 12px 32px var(--color-shadow-xl);
+  box-shadow: 0 8px 24px var(--color-shadow-md);
 }
 
-/* Header */
+/* ── Collapsed header row — entire row is clickable ── */
 .auto-backup-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.auto-backup-header:hover {
+  background: var(--color-surface-base);
+}
+
+.auto-backup-container.active .auto-backup-header {
+  border-radius: 16px 16px 0 0;
+}
+
+/* ── Left side of header: title + preview time ── */
+.auto-backup-header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
 .auto-backup-title {
+  font-family: var(--font-desc);
   font-size: 13px;
   font-weight: 700;
   color: var(--primary-dark);
+  letter-spacing: 0.01em;
 }
 
-/* Toggle */
+/* Last backup time shown in header — only visible when collapsed */
+.auto-backup-preview {
+  font-family: var(--font-desc);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  max-height: 16px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+}
 
-/* ── Toggle Switch (Sliding) ── */
+/* Hide preview text when panel is expanded */
+.auto-backup-container.active .auto-backup-preview {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ── Toggle switch ── */
 .auto-backup-toggle {
   position: relative;
   display: inline-block;
-  width: 38px;
-  height: 20px;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+  /* stop header click from firing when clicking the label */
+  cursor: pointer;
 }
 
 .auto-backup-toggle input {
   opacity: 0;
   width: 0;
   height: 0;
+  position: absolute;
 }
 
 .auto-backup-slider {
   position: absolute;
   inset: 0;
   background: var(--color-toggle-off-bg);
-  border: 1.5px solid var(--color-border);
   border-radius: 999px;
-  transition: background 0.25s ease, border-color 0.25s ease;
   cursor: pointer;
+  transition: background 0.25s ease;
 }
 
-/* Circle knob */
 .auto-backup-slider::before {
   content: "";
   position: absolute;
-  height: 14px;
-  width: 14px;
-  left: 2px;
+  width: 16px;
+  height: 16px;
+  left: 3px;
   top: 50%;
   transform: translateY(-50%);
   background: var(--color-toggle-knob);
   border-radius: 50%;
-  transition: transform 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
-/* ON state */
 .auto-backup-toggle input:checked + .auto-backup-slider {
   background: var(--primary-blue);
-  border-color: var(--primary-blue);
 }
 
 .auto-backup-toggle input:checked + .auto-backup-slider::before {
   transform: translate(18px, -50%);
 }
 
-/* Expand panel */
+/* ── Expandable panel — same grid-trick as notes-collapser ── */
 .auto-backup-panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease;
-}
-
-.auto-backup-container.active .auto-backup-panel {
-  grid-template-rows: 1fr;
-}
-
-.auto-backup-panel > * {
-  overflow: hidden;
-}
-
-/* Inner content */
-.auto-backup-row {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  align-items: center;
-  padding: 8px 12px;
-  font-size: 12px;
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-.auto-backup-row:last-child {
-  border-bottom: none;
-}
-
-.auto-backup-row .label {
-  color: var(--color-text-muted);
-  font-weight: 600;
-  text-align: start;
-}
-
-.auto-backup-row .value {
-  color: var(--primary-dark);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.auto-backup-row .action {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Mini buttons */
-.mini-btn {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--primary-blue);
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.mini-btn:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--primary-blue);
-}
-
-.auto-backup-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .auto-backup-container.active .auto-backup-panel {
@@ -675,14 +664,200 @@ header {
 
 .auto-backup-panel-inner {
   overflow: hidden;
+  border-top: 0px solid var(--color-border-subtle);
+  transition: border-top-width 0.35s ease;
+}
+
+.auto-backup-container.active .auto-backup-panel-inner {
+  border-top-width: 1.5px;
+}
+
+/* ── Each info row — left aligned, Quicksand font ── */
+.auto-backup-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.auto-backup-row:last-child {
+  border-bottom: none;
+  padding-bottom: 14px;
+}
+
+.auto-backup-row .label {
+  font-family: var(--font-desc);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding-top: 1px;
+}
+
+.auto-backup-row .value {
+  font-family: var(--font-desc);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: left;
+}
+
+.auto-backup-row .action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ── Countdown value ── */
+.value--countdown {
+  font-family: "Cascadia Code", "Fira Code", "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--primary-dark);
+}
+
+/* ── Path hint ── */
+.path-hint {
+  font-family: "Cascadia Code", "Fira Code", "Courier New", monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  word-break: break-all;
+  line-height: 1.4;
+  text-align: left;
+}
+
+/* ── Mini action buttons ── */
+.mini-btn {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: var(--font-desc);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.mini-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--primary-blue);
+}
+
+/* ── Interval dropdown ── */
+.interval-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--primary-white);
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--color-shadow-xl);
+  z-index: 300;
+  min-width: 170px;
+  overflow: hidden;
+}
+
+.interval-option {
+  padding: 9px 14px;
+  font-family: var(--font-desc);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: left;
+}
+
+.interval-option:last-child {
+  border-bottom: none;
+}
+
+.interval-option:hover {
+  background: var(--color-surface-hover);
+}
+
+.interval-option.selected {
+  color: var(--primary-blue);
+  background: var(--color-badge-archive-bg);
 }
 
 /* ── Dark mode ── */
-
 [data-theme="dark"] .modal-card {
   background: #1e293b;
 }
 
 [data-theme="dark"] .auto-backup-container {
   background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .auto-backup-container:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .auto-backup-header:hover {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .auto-backup-title {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .auto-backup-panel-inner {
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] .auto-backup-row {
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .auto-backup-row .value {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .path-hint {
+  color: #475569;
+}
+
+[data-theme="dark"] .mini-btn {
+  border-color: #334155;
+  color: var(--primary-blue);
+}
+
+[data-theme="dark"] .mini-btn:hover {
+  background: #334155;
+  border-color: var(--primary-blue);
+}
+
+[data-theme="dark"] .interval-dropdown {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .interval-option {
+  color: #f1f5f9;
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .interval-option:hover {
+  background: #334155;
+}
+
+[data-theme="dark"] .interval-option.selected {
+  color: #93c5fd;
+  background: #1e3a5f;
 }

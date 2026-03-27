@@ -21,7 +21,7 @@
 
   "options_page": "dashboard/dashboard.html",
 
-  "permissions": ["storage", "activeTab", "tabs", "scripting", "downloads"],
+  "permissions": ["storage", "activeTab", "tabs", "scripting", "downloads", "alarms"],
 
   "host_permissions": ["<all_urls>", "http://*/*", "https://*/*"],
 
@@ -63,6 +63,7 @@
         "utils/exportModal.js",
         "utils/exporter.js",
 
+        "utils/autoBackupExporter.js",
         "utils/exporters/exportJSON.js",
         "utils/exporters/exportMD.js",
         "utils/exporters/exportHTML.js",
