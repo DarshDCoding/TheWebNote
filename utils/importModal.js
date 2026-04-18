@@ -127,11 +127,26 @@ importFileInput.addEventListener("change", () => {
 document.addEventListener("paste", (e) => {
   if (!importOverlay.classList.contains("is-open")) return;
   if (importStateSelect.hidden) return;
-  const fileItem = Array.from(e.clipboardData.items || [])
-    .find(i => i.kind === "file" && i.type === "application/json");
+
+  const items = Array.from(e.clipboardData.items || []);
+
+  // 1. File item (e.g. copied from OS file manager)
+  const fileItem = items.find(i => i.kind === "file" && i.type === "application/json");
   if (fileItem) {
     const file = fileItem.getAsFile();
-    if (file) loadFile(file);
+    if (file) { loadFile(file); return; }
+  }
+
+  // 2. Plain text item -- user copied raw JSON text and pressed Ctrl+V
+  const textItem = items.find(i => i.kind === "string" && i.type === "text/plain");
+  if (textItem) {
+    textItem.getAsString((text) => {
+      const trimmed = text.trim();
+      if (!trimmed.startsWith("{")) return; // ignore non-JSON pastes
+      const blob = new Blob([trimmed], { type: "application/json" });
+      const file = new File([blob], "pasted-backup.json", { type: "application/json" });
+      loadFile(file);
+    });
   }
 });
 
