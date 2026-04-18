@@ -17,3 +17,6 @@ export const PRIORITY_COLORS = [
 // Blank per-site data shape — use as a default / fallback value.
 // Spread or clone before mutating: { ...EMPTY_SITE_DATA } or structuredClone().
 export const EMPTY_SITE_DATA = { important: [], medium: [], normal: [] };
+
+// Maximum number of notes allowed in a single backup file.
+export const MAX_NOTES = 1000;

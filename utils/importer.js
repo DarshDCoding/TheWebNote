@@ -1,7 +1,5 @@
-import { PRIORITIES, EMPTY_SITE_DATA } from "./constants.js";
+import { PRIORITIES, EMPTY_SITE_DATA, MAX_NOTES } from "./constants.js";
 import { sendMessage }                 from "./messaging.js";
-
-const MAX_NOTES = 1000;
 
 export function validateBackup(parsed) {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
