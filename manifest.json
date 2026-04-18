@@ -78,7 +78,11 @@
 
         "dashboard/dashboard.html",
         "dashboard/dashboard.css",
-        "dashboard/dashboard.js"
+        "dashboard/exportModal.css",
+        "dashboard/importModal.css",
+        "dashboard/dashboard.js",
+
+        "utils/importer.js"
       ],
       "matches": ["<all_urls>"]
     }

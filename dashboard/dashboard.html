@@ -5,6 +5,8 @@
 
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="exportModal.css" />
+    <link rel="stylesheet" href="importModal.css" />
     <link rel="stylesheet" href="../darkMode.css" />
 
     <script src="../libs/jspdf.min.js" defer></script>
@@ -31,8 +33,10 @@
       <p class="dashboard-subtitle">All your notes, across every site.</p>
       <div class="header-controls">
         <div class="nav-controls">
-          <button class="btn btn-back" id="backBtn">Back</button>
+          <button class="btn btn-import" id="importBtn">Import</button>
           <button class="btn btn-export" id="exportBtn">Export</button>
+          <button class="btn btn-back" id="backBtn">Back</button>
+          <input type="file" id="importFileInput" accept=".json" hidden />
         </div>
 
         <!-- Auto Backup (Header Right) -->
@@ -128,6 +132,66 @@
           <button class="btn btn-back" id="exportModalCancel">Cancel</button>
           <button class="btn btn-export" id="exportConfirmBtn">Export</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importOverlay">
+      <div class="modal-card" id="importModal">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <h2 class="modal-title">Import Notes</h2>
+          <button class="modal-close" id="importModalClose">Back</button>
+        </div>
+
+        <!-- State 1: File Selection -->
+        <div id="importStateSelect">
+          <div class="modal-body">
+            <div class="modal-section">
+              <h3 class="modal-section-title">Select Backup File</h3>
+              <p class="modal-section-sub">Accepts .json backup files exported by The Web Note.</p>
+
+              <div class="import-dropzone" id="importDropzone">
+                <p class="import-dropzone-label">Drag & drop your backup file here</p>
+                <p class="import-dropzone-sub">or</p>
+                <button class="btn btn-export" id="importBrowseBtn">Browse File</button>
+                <p class="import-dropzone-sub">You can also paste a file with Ctrl+V / ⌘V</p>
+              </div>
+
+              <div class="import-file-preview" id="importFilePreview"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-back" id="importModalCancel">Cancel</button>
+            <button class="btn btn-export" id="importConfirmBtn" disabled>Import</button>
+          </div>
+        </div>
+
+        <!-- State 2: Importing Progress -->
+        <div id="importStateProgress" hidden>
+          <div class="modal-body">
+            <div class="import-progress-panel" id="importProgressPanel">
+              <p class="import-progress-label" id="importProgressLabel">Importing…</p>
+              <!-- SVG placeholder — swap in later -->
+              <div class="import-progress-svg-slot"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- State 3: Results -->
+        <div id="importStateResults" hidden>
+          <div class="modal-body">
+            <div class="modal-section">
+              <div class="import-summary" id="importSummary"></div>
+              <div class="import-results-list" id="importResultsList"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-export" id="importDoneBtn">Done</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </body>

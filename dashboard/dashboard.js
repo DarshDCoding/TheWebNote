@@ -2,6 +2,7 @@ import { initTheme } from "../utils/toggleDark.js";
 import { renderElement }         from "../utils/render.js";
 import { addGlobalEventListner, initImageViewer } from "../utils/events.js";
 import { initExportModal } from "../utils/exportModal.js";
+import { initImportModal } from "../utils/importModal.js";
 import { sendMessage } from "../utils/messaging.js";
 import { PRIORITIES } from "../utils/constants.js";
 
@@ -554,6 +555,16 @@ async function handleSilentAutoBackup() {
 initTheme();
 initImageViewer();
 initExportModal();
+initImportModal({
+  onDone: async () => {
+    try {
+      const sites = await sendMessage({ action: "GET_ALL" });
+      renderDashboard(sites);
+    } catch (err) {
+      console.error("Dashboard refresh error:", err);
+    }
+  },
+});
 
 const isSilentBackup = new URLSearchParams(window.location.search).has("autobackup");
 

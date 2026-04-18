@@ -1,0 +1,376 @@
+/* ── Drop zone ── */
+.import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 24px;
+  border: 2px dashed var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface-base);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  cursor: default;
+  text-align: center;
+}
+.import-dropzone.drag-over {
+  border-color: var(--primary-blue);
+  background: var(--color-badge-archive-bg);
+}
+
+.import-dropzone-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0;
+}
+.import-dropzone-sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── File preview (shown after file is selected) ── */
+.import-file-preview {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  min-height: 20px;
+}
+.import-file-preview.has-error {
+  color: #ef4444;
+}
+
+/* ── Progress panel (State 2) ── */
+.import-progress-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.import-progress-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0;
+}
+.import-progress-svg-slot {
+  width: 80px;
+  height: 80px;
+}
+
+/* ── Results (State 3) ── */
+.import-summary {
+  padding: 12px 14px;
+  background: var(--color-surface-base);
+  border: 1.5px solid var(--color-border-subtle);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 16px;
+}
+
+.import-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.import-site-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--primary-white);
+}
+
+.import-site-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.import-site-favicon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  object-fit: contain;
+}
+
+.import-site-counts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.import-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+}
+.import-badge-imported {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #86efac;
+}
+.import-badge-duplicate {
+  background: #fefce8;
+  color: #854d0e;
+  border-color: #fde047;
+}
+.import-badge-failed {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+.import-badge-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+.btn-overwrite {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn-overwrite:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--primary-blue);
+}
+.btn-overwrite:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Clickable duplicate badge ── */
+.import-badge-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+.import-badge-clickable:hover {
+  opacity: 0.82;
+  transform: scale(1.03);
+}
+.import-badge-clickable:active {
+  transform: scale(0.97);
+}
+
+
+/* ── Dark mode ── */
+[data-theme="dark"] .import-dropzone {
+  background: #0f172a;
+  border-color: #334155;
+}
+[data-theme="dark"] .import-dropzone.drag-over {
+  border-color: var(--primary-blue);
+  background: #1e3a5f;
+}
+[data-theme="dark"] .import-dropzone-label {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-summary {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-site-row {
+  background: #1e293b;
+  border-color: #334155;
+}
+[data-theme="dark"] .import-site-header {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-progress-label {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-file-preview {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-badge-imported {
+  background: #14532d;
+  color: #86efac;
+  border-color: #166534;
+}
+[data-theme="dark"] .import-badge-duplicate {
+  background: #2d2510;
+  color: #fde68a;
+  border-color: #854d0e;
+}
+[data-theme="dark"] .import-badge-failed,
+[data-theme="dark"] .import-badge-error {
+  background: #2d1515;
+  color: #fca5a5;
+  border-color: #991b1b;
+}
+[data-theme="dark"] .btn-overwrite {
+  border-color: #334155;
+  color: var(--primary-blue);
+}
+[data-theme="dark"] .btn-overwrite:hover {
+  background: #334155;
+  border-color: var(--primary-blue);
+}
+/* ── Scroll fix: state wrappers must fill the modal card ── */
+/* [hidden] override must come first — explicit display:flex beats the hidden attribute otherwise */
+#importStateSelect[hidden],
+#importStateProgress[hidden],
+#importStateResults[hidden] {
+  display: none;
+}
+#importStateSelect,
+#importStateResults {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+#importStateSelect .modal-body,
+#importStateResults .modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* ── Clickable duplicate badge ── */
+.import-badge-clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+.import-badge-clickable:hover {
+  opacity: 0.82;
+  transform: scale(1.03);
+}
+.import-badge-clickable:active {
+  transform: scale(0.97);
+}
+
+/* ── Duplicate panel — collapsed by default, expands with transition ── */
+.import-dup-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+  overflow: hidden;
+}
+.import-dup-panel.is-open {
+  grid-template-rows: 1fr;
+}
+/* Inner wrapper is required for grid-template-rows trick to work */
+.import-dup-panel > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Visible content inside the panel */
+.import-dup-panel-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1.5px dashed var(--color-border);
+  margin-top: 8px;
+}
+
+.import-dup-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.import-dup-panel-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.import-dup-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.import-dup-card-wrap .task-card:hover {
+  transform: none;
+}
+.import-dup-card .task-content {
+  padding: 12px 14px;
+}
+.import-dup-card .task-desc {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.import-dup-card .task-footer {
+  padding-top: 8px;
+}
+.import-dup-card-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  background-color: #e5e7eb;
+}
+
+/* ── Dark mode for new additions ── */
+[data-theme="dark"] .import-dup-panel-inner {
+  border-top-color: #334155;
+}
+[data-theme="dark"] .import-dup-panel-label {
+  color: #94a3b8;
+}
+/* ── Per-note overwrite button ── */
+.btn-overwrite-note {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+/* Dimmed state once a card is overwritten */
+.import-dup-card-done {
+  opacity: 0.55;
+  pointer-events: none;
+}
+.import-dup-card-done .btn-overwrite-note {
+  pointer-events: none;
+}
+
+/* ── Dark mode ── */
+[data-theme="dark"] .btn-overwrite-note {
+  border-color: #334155;
+  color: var(--primary-blue);
+}
+[data-theme="dark"] .btn-overwrite-note:hover {
+  background: #334155;
+  border-color: var(--primary-blue);
+}

@@ -252,11 +252,30 @@ function deleteSite(url) {
 }
 
 
+// IMPORT SITES
+// Resolves with { ok: true } or rejects with the first DB error encountered.
+
+function importSites(sites) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      for (const { url, data } of sites) {
+        await new Promise((res, rej) => {
+          const tx    = db.transaction("notes", "readwrite");
+          const store = tx.objectStore("notes");
+          const req   = store.put(data, url);
+          req.onsuccess = () => res();
+          req.onerror   = () => rej(req.error);
+        });
+      }
+      resolve({ ok: true });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+
 // ── AUTO BACKUP ALARM LISTENER ────────────────────────────────────────────────
-// When the alarm fires, background.js opens the dashboard in a hidden tab with
-// ?autobackup=1.  The dashboard detects this flag, calls runAutoBackup(), then
-// sends BACKUP_COMPLETED back to background, which broadcasts it to any open
-// dashboard tabs so their countdown resets live.
 
 const AUTO_BACKUP_ALARM = "webnote-auto-backup";
 const AUTO_BACKUP_KEY   = "webnoteAutoBackup";
@@ -314,13 +333,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   const actions = {
-    ADD_NOTE:    () => addNote(request.url, request.note),
-    DELETE_NOTE: () => deleteNote(request.url, request.id),
-    GET_NOTES:   () => getSiteNotes(request.url),
-    CHECK_SITE:  () => siteHasNotes(request.url),
-    GET_ALL:     () => getAllSites(),
-    DELETE_SITE: () => deleteSite(request.url),
-    UPDATE_NOTE: () => updateNote(request.url, request.id, request.updates),
+    ADD_NOTE:     () => addNote(request.url, request.note),
+    DELETE_NOTE:  () => deleteNote(request.url, request.id),
+    GET_NOTES:    () => getSiteNotes(request.url),
+    CHECK_SITE:   () => siteHasNotes(request.url),
+    GET_ALL:      () => getAllSites(),
+    DELETE_SITE:  () => deleteSite(request.url),
+    UPDATE_NOTE:  () => updateNote(request.url, request.id, request.updates),
+    IMPORT_SITES: () => importSites(request.sites),
   };
 
   const action = actions[request.action];

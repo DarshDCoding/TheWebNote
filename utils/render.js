@@ -20,7 +20,7 @@ export const renderElement = (note, context = "popup") => {
 
 ${note.img ? `<img src="${note.img}" alt="Task Image" class="task-image note-image-view" data-src="${note.img}">` : ""}
         <div class="task-content">
-            <p class="task-desc">${note.note}</p>
+${note.note != null && note.note !== "" ? `            <p class="task-desc">${note.note}</p>` : ""}
             <div class="task-footer">
                 <p class="btn-action date">${note.createdAt}</p>
                 <div class="btn-actions">
