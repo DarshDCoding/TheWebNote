@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "The Web Note",
   "description": "A Manifest V3 Chrome extension that persists per-site notes in IndexedDB, injects a floating UI via content scripts, and surfaces saved notes automatically on revisit.",
-  "version": "1.1.1",
+  "version": "1.2.0",
 
   "action": {
     "default_popup": "index.html",
