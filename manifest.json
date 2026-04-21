@@ -62,6 +62,7 @@
 
         "utils/exportModal.js",
         "utils/exporter.js",
+        "utils/importModal.js",
 
         "utils/autoBackupExporter.js",
         "utils/exporters/exportJSON.js",

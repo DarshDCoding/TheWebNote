@@ -289,12 +289,12 @@ header {
   border-color: var(--primary-blue);
 }
 
-.btn-export {
+.btn-export, .btn-import {
   background-color: var(--primary-blue);
   color: #ffffff;
   border: 1px solid var(--primary-blue);
 }
-.btn-export:hover {
+.btn-export:hover, .btn-import:hover {
   background-color: var(--color-blue-hover);
   transform: translateY(-2px);
 }
@@ -342,6 +342,9 @@ header {
   color: var(--primary-dark);
 }
 .modal-close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: none;
   border: none;
   font-size: 16px;
@@ -860,4 +863,512 @@ header {
 [data-theme="dark"] .interval-option.selected {
   color: #93c5fd;
   background: #1e3a5f;
+}
+
+/* ══════════════════════════════════════════════════════
+   IMPORT MODAL
+   ══════════════════════════════════════════════════════ */
+
+.btn-import:disabled {
+  background-color: var(--primary-white);
+  border-color: var(--primary-dark);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Modal card size ── */
+.import-modal-card {
+  width: 520px;
+  max-width: 95vw;
+  max-height: 88vh;
+}
+
+/* ── Step indicator ── */
+.import-step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-right: auto;
+}
+
+.import-step-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-surface-base);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.import-step-dot.active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #fff;
+}
+
+.import-step-dot.done {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+.import-step-line {
+  width: 28px;
+  height: 2px;
+  background: var(--color-border);
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.import-step-line.active {
+  background: #10b981;
+}
+
+/* ── Drop zone ── */
+.import-drop-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: 12px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.import-drop-zone:hover {
+  border-color: var(--primary-blue);
+  background: var(--color-surface-base);
+}
+
+.import-drop-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.import-drop-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.import-drop-label code {
+  background: var(--color-surface-base);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 12px;
+}
+
+.import-drop-sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* ── File info pill ── */
+.import-file-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: var(--color-surface-base);
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.import-file-info svg {
+  flex-shrink: 0;
+  color: var(--primary-blue);
+}
+
+/* ── Divider ── */
+.import-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.import-divider::before,
+.import-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ── Paste area ── */
+.import-paste-area {
+  width: 100%;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-family: "Cascadia Code", "Fira Code", "Courier New", monospace;
+  color: var(--primary-dark);
+  background: var(--primary-white);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.import-paste-area:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.import-paste-area::placeholder {
+  color: var(--color-text-muted);
+  font-family: var(--font-desc);
+}
+
+/* ── Validation message ── */
+.import-validation-msg {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.import-validation-msg.iv-success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.import-validation-msg.iv-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ── Inline priority badges inside validation ── */
+.iv-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid;
+  margin-left: 2px;
+}
+.iv-badge-imp {
+  background: var(--important-bg);
+  color: var(--important-text);
+  border-color: var(--important-border);
+}
+.iv-badge-med {
+  background: var(--medium-bg);
+  color: var(--medium-text);
+  border-color: var(--medium-border);
+}
+.iv-badge-nor {
+  background: var(--normal-bg);
+  color: var(--normal-text);
+  border-color: var(--normal-border);
+}
+
+/* ── Loading spinner ── */
+.import-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--primary-blue);
+  border-radius: 50%;
+  animation: importSpin 0.7s linear infinite;
+}
+
+@keyframes importSpin {
+  to { transform: rotate(360deg); }
+}
+
+.import-loading-msg {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* ── Results list ── */
+#importResultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ir-site-block {
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ir-site-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--color-surface-base);
+  border-bottom: 1px solid var(--color-border-subtle);
+  flex-wrap: wrap;
+}
+
+.ir-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.ir-site-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Result badges ── */
+.ir-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.ir-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.ir-badge:hover {
+  opacity: 0.85;
+  transform: scale(1.04);
+}
+
+.ir-badge-imported {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.ir-badge-duplicate {
+  background: var(--medium-bg);
+  color: var(--medium-text);
+  border-color: var(--medium-border);
+}
+
+.ir-badge-failed {
+  background: var(--important-bg);
+  color: var(--important-text);
+  border-color: var(--important-border);
+}
+
+/* ── Duplicate overwrite-all control ── */
+.ir-dup-controls {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--primary-white);
+}
+
+.ir-overwrite-all-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  cursor: pointer;
+}
+
+.ir-overwrite-all-label input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+/* ── Notes panel ── */
+.ir-notes-panel {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--primary-white);
+}
+
+.ir-empty-panel {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 10px 0;
+}
+
+.ir-note-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  background: var(--color-surface-base);
+  min-height: 36px;
+}
+
+.ir-note-text {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--primary-dark);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ir-priority-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  border: 1px solid;
+  flex-shrink: 0;
+  text-transform: capitalize;
+}
+
+.ir-priority-important {
+  background: var(--important-bg);
+  color: var(--important-text);
+  border-color: var(--important-border);
+}
+.ir-priority-medium {
+  background: var(--medium-bg);
+  color: var(--medium-text);
+  border-color: var(--medium-border);
+}
+.ir-priority-normal {
+  background: var(--normal-bg);
+  color: var(--normal-text);
+  border-color: var(--normal-border);
+}
+
+/* ── Per-note overwrite label ── */
+.ir-note-overwrite-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #92400e;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.ir-note-overwrite-label input[type="checkbox"] {
+  width: 13px;
+  height: 13px;
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+/* ── Dark mode overrides ── */
+[data-theme="dark"] .import-drop-zone {
+  border-color: #334155;
+}
+[data-theme="dark"] .import-drop-zone:hover {
+  border-color: var(--primary-blue);
+  background: #0f172a;
+}
+[data-theme="dark"] .import-drop-label {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-drop-label code {
+  background: #334155;
+  border-color: #475569;
+  color: #cbd5e1;
+}
+[data-theme="dark"] .import-file-info {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-paste-area {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+[data-theme="dark"] .import-paste-area::placeholder { color: #475569; }
+[data-theme="dark"] .import-validation-msg.iv-success {
+  background: #052e16;
+  color: #86efac;
+  border-color: #166534;
+}
+[data-theme="dark"] .import-validation-msg.iv-error {
+  background: #2d1515;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+[data-theme="dark"] .ir-site-block { border-color: #334155; }
+[data-theme="dark"] .ir-site-header {
+  background: #0f172a;
+  border-bottom-color: #334155;
+}
+[data-theme="dark"] .ir-site-name { color: #f1f5f9; }
+[data-theme="dark"] .ir-badge-imported {
+  background: #052e16;
+  color: #86efac;
+  border-color: #166534;
+}
+[data-theme="dark"] .ir-dup-controls {
+  background: #1e293b;
+  border-bottom-color: #334155;
+}
+[data-theme="dark"] .ir-overwrite-all-label { color: #fde68a; }
+[data-theme="dark"] .ir-notes-panel { background: #1e293b; }
+[data-theme="dark"] .ir-note-row {
+  background: #0f172a;
+  border-color: #334155;
+}
+[data-theme="dark"] .ir-note-text { color: #f1f5f9; }
+[data-theme="dark"] .ir-note-overwrite-label { color: #fde68a; }
+[data-theme="dark"] .import-modal-card { background: #1e293b; }
+[data-theme="dark"] .import-step-dot {
+  background: #0f172a;
+  border-color: #334155;
+  color: #475569;
 }

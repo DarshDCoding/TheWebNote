@@ -31,8 +31,9 @@
       <p class="dashboard-subtitle">All your notes, across every site.</p>
       <div class="header-controls">
         <div class="nav-controls">
-          <button class="btn btn-back" id="backBtn">Back</button>
+          <button class="btn btn-import" id="importBtn">Import</button>
           <button class="btn btn-export" id="exportBtn">Export</button>
+          <button class="btn btn-back" id="backBtn">Back</button>
         </div>
 
         <!-- Auto Backup (Header Right) -->
@@ -128,6 +129,82 @@
           <button class="btn btn-back" id="exportModalCancel">Cancel</button>
           <button class="btn btn-export" id="exportConfirmBtn">Export</button>
         </div>
+      </div>
+    </div>
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importOverlay">
+      <div class="modal-card import-modal-card">
+
+        <!-- Step 1: Select File -->
+        <div id="importStep1" style="display:flex; flex-direction:column; height:100%;">
+          <div class="modal-header">
+            <h2 class="modal-title">Import Notes</h2>
+            <button class="modal-close" id="importModalClose"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Drop zone -->
+            <div class="import-drop-zone" id="importDropZone">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="import-drop-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p class="import-drop-label">Drag &amp; drop your backup <code>.json</code> file here</p>
+              <p class="import-drop-sub">or click to browse</p>
+              <input type="file" id="importFileInput" accept=".json,application/json" style="display:none">
+            </div>
+
+            <!-- File info pill (shown after file selected) -->
+            <div class="import-file-info" id="importFileInfo" style="display:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span id="importFileName"></span>
+            </div>
+
+            <!-- Divider -->
+            <div class="import-divider"><span>or paste JSON</span></div>
+
+            <!-- Paste area -->
+            <textarea
+              id="importPasteArea"
+              class="import-paste-area"
+              placeholder='Paste your backup JSON here…'
+              rows="4"
+            ></textarea>
+
+            <!-- Validation message -->
+            <div class="import-validation-msg" id="importValidationMsg"></div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-back" id="importCancelBtn">Cancel</button>
+            <button class="btn btn-import" id="importNextBtn" disabled>Next &#8594</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Loading -->
+        <div id="importStep2" style="display:none; flex-direction:column; height:100%; justify-content:center; align-items:center; gap:20px; padding:40px 24px;">
+          <div class="import-spinner"></div>
+          <p class="import-loading-msg" id="importLoadingMsg">Analysing backup…</p>
+        </div>
+
+        <!-- Step 3: Results -->
+        <div id="importStep3" style="display:none; flex-direction:column; height:100%;">
+          <div class="modal-header">
+            <h2 class="modal-title">Import Preview</h2>
+            <button class="modal-close" id="importStep3Close"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></button>
+          </div>
+
+          <div class="modal-body">
+            <p class="modal-section-sub" style="margin-top:0;">
+              Review what will be imported. Click any badge to see its notes.
+              For duplicates, choose which ones to overwrite.
+            </p>
+            <div id="importResultsList"></div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-back" id="importBackBtn">&#8592 Back</button>
+            <button class="btn btn-import" id="importCommitBtn">Import Now</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </body>

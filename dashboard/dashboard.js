@@ -2,6 +2,7 @@ import { initTheme } from "../utils/toggleDark.js";
 import { renderElement }         from "../utils/render.js";
 import { addGlobalEventListner, initImageViewer } from "../utils/events.js";
 import { initExportModal } from "../utils/exportModal.js";
+import { initImportModal } from "../utils/importModal.js";
 
 const container = document.getElementById("dashboard-container");
 document.getElementById("backBtn").addEventListener("click", () => window.close());
@@ -564,6 +565,7 @@ async function handleSilentAutoBackup() {
 initTheme();
 initImageViewer();
 initExportModal();
+initImportModal();
 
 const isSilentBackup = new URLSearchParams(window.location.search).has("autobackup");
 
