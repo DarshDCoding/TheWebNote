@@ -881,6 +881,51 @@ header {
   width: 520px;
   max-width: 95vw;
   max-height: 88vh;
+  /* Ensure the card itself is a proper flex column so body can scroll */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Steps fill the card's flex column — header/footer stay fixed, body scrolls */
+.import-modal-card > div {
+  flex: 1;
+  min-height: 0;        /* critical: lets flex children shrink below content size */
+  overflow: hidden;
+}
+
+/* Scrollable body inside import modal */
+.import-modal-card .modal-body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  /* Themed scrollbar — Webkit */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.import-modal-card .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.import-modal-card .modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.import-modal-card .modal-body::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+}
+.import-modal-card .modal-body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}
+
+/* Dark theme scrollbar */
+[data-theme="dark"] .import-modal-card .modal-body {
+  scrollbar-color: #334155 transparent;
+}
+[data-theme="dark"] .import-modal-card .modal-body::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+[data-theme="dark"] .import-modal-card .modal-body::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
 }
 
 /* ── Step indicator ── */
@@ -931,16 +976,30 @@ header {
   background: #10b981;
 }
 
+/* ── Import Step 1 section header ── */
+.import-section-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+
+.import-section-hint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
 /* ── Drop zone ── */
 .import-drop-zone {
   border: 2px dashed var(--color-border);
-  border-radius: 12px;
-  padding: 32px 20px;
+  border-radius: 14px;
+  padding: 36px 24px 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
+  gap: 10px;
+  cursor: default;
   transition: border-color 0.2s ease, background 0.2s ease;
   text-align: center;
   user-select: none;
@@ -954,26 +1013,35 @@ header {
 .import-drop-icon {
   color: var(--color-text-muted);
   flex-shrink: 0;
+  margin-bottom: 4px;
 }
 
 .import-drop-label {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--primary-dark);
 }
 
-.import-drop-label code {
-  background: var(--color-surface-base);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  padding: 1px 5px;
-  font-size: 12px;
-}
-
-.import-drop-sub {
+.import-drop-or {
   font-size: 12px;
   color: var(--color-text-muted);
+  margin: 0;
 }
+
+.import-browse-btn {
+  border-radius: 999px !important;
+  padding: 8px 28px !important;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.import-drop-paste-hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
 
 /* ── File info pill ── */
 .import-file-info {
