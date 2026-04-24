@@ -4,7 +4,7 @@
 
 The web has no memory — until now. Leave notes on any website and find them waiting, right where they belong.
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue)
+![Version](https://img.shields.io/badge/version-1.2.1-blue)
 ![License](https://img.shields.io/badge/license-GPL--v3-blue)
 ![Chrome](https://img.shields.io/badge/browser-Chrome%2088+-orange)
 ![Manifest](https://img.shields.io/badge/manifest-V3-purple)
@@ -27,6 +27,9 @@ The web has no memory — until now. Leave notes on any website and find them wa
 - 🙈 Toggle pill hides automatically during fullscreen (videos, games, etc.) and restores on exit
 - 📂 Central dashboard to view, manage and delete notes across all sites
 - 🌙 Dark mode with persistent preference
+- 📤 **Export notes** — download your notes as JSON, HTML, PDF, Markdown, CSV, TXT, or XLSX
+- 📥 **Import notes** — restore from a JSON backup with duplicate detection and per-note conflict resolution
+- 🔁 **Auto-backup** — schedule automatic JSON backups at a chosen interval (3 h, 6 h, 9 h, 12 h, or 24 h), saved directly to your Downloads folder
 - 🔒 100% local — your data never leaves your device
 
 ---
@@ -167,50 +170,97 @@ When you visit a site that has saved notes, a pill-shaped button appears in the 
 ### Dashboard
 Click **Dashboard** in the popup to open the full dashboard in a new tab. It shows all notes grouped by website. Each site card displays notes in a horizontal grid (min 300px per card). Up to 5 notes are shown by default with a **Show all** toggle for the rest.
 
+### Exporting notes
+Click **Export** in the dashboard to open the export modal. Select which sites to include and which additional formats to generate. **JSON is always exported** — it is the only format that supports import. Additional formats are optional:
+
+| Format | Best for |
+|--------|----------|
+| JSON | Import / full backup (always included) |
+| HTML | Self-contained archive, opens in any browser |
+| PDF | Printable archive |
+| Markdown | Obsidian, Notion, or readable archive |
+| CSV | Excel or Google Sheets |
+| TXT | Plain text archive |
+
+When Markdown, CSV, or TXT is selected, a separate `images.zip` is also downloaded containing all note images referenced by those files.
+
+### Importing notes
+Click **Import** in the dashboard to open the 3-step import modal:
+
+1. **File selection** — drag and drop a `.json` backup file or click to browse. The file is validated before proceeding.
+2. **Loading** — the file is parsed and each note is checked against your existing data to detect duplicates.
+3. **Results** — a summary shows how many notes will be imported, how many are duplicates, and how many failed. For each duplicate you can choose to skip or overwrite it individually, or apply a blanket decision per site.
+
+Only JSON files exported by TheWebNote are accepted. The import format is validated against a strict schema before any data is written.
+
+### Auto-backup
+Open the **Auto-backup** panel in the dashboard header to schedule automatic JSON backups. Choose an interval (every 3, 6, 9, 12, or 24 hours). When a backup fires, the file is downloaded automatically to your `TheWebNote-Backup` folder inside Downloads. The alarm is managed by Chrome's `alarms` API and survives browser restarts.
+
 ---
 
 ## 🗂️ Project Structure
 
 ```
-TheWebNote/                     # outer folder (created by ZIP extraction)
-└── TheWebNote/                 # inner folder — load THIS into Chrome
-    │
-    ├── manifest.json           # Extension config (MV3)
-    ├── background.js           # Service worker — IndexedDB + message router
-    ├── content.js              # Injected into every page — floating toggle pill
-    ├── update.bat              # Windows update script (run to update safely)
-    ├── update.sh               # Mac/Linux update script (run to update safely)
-    │
-    ├── index.html              # Popup UI
-    ├── popup.js                # Popup logic
-    ├── style.css               # Shared base styles (light mode)
-    ├── darkMode.css            # All dark mode overrides ([data-theme="dark"])
-    │
-    ├── dashboard/
-    │   ├── dashboard.html      # Dashboard page
-    │   ├── dashboard.js        # Dashboard logic
-    │   └── dashboard.css       # Dashboard-specific styles
-    │
-    ├── utils/
-    │   ├── date.js             # Date/time formatting
-    │   ├── events.js           # Global event delegation helper + image viewer init
-    │   ├── helpers.js          # Shared pure helpers (priority parsing, image compression)
-    │   ├── imageHandler.js     # Image preview in popup
-    │   ├── inputProcess.js     # Parses note input + priority tags
-    │   ├── editHandler.js      # Edit mode UI state (enter, reset, image removal)
-    │   ├── noteService.js      # Delete + update note handlers (popup)
-    │   ├── render.js           # renderElement + RenderNotes
-    │   ├── toggleDark.js       # Dark mode toggle (shared by popup + dashboard)
-    │   └── urls.js             # Active tab URL helpers (Promise-based)
-    │
-    └── assets/
-        ├── icons/
-        │   └── icon128.png         # Extension icon
-        └── svgs/
-            ├── darkMode.svg        # Theme toggle icon (shown in light mode)
-            ├── lightMode.svg       # Theme toggle icon (shown in dark mode)
-            ├── nothingToShow.svg   # Empty state illustration
-            └── lookingToShow.svg   # Loading state illustration
+TheWebNote/                       #load THIS into Chrome
+  │
+  ├── manifest.json               # Extension config (MV3)
+  ├── background.js               # Service worker — IndexedDB, message router, auto-backup alarm
+  ├── content.js                  # Injected into every page — floating toggle pill
+  ├── update.bat                  # Windows update script (run to update safely)
+  ├── update.sh                   # Mac/Linux update script (run to update safely)
+  │
+  ├── index.html                  # Popup UI
+  ├── popup.js                    # Popup logic
+  ├── style.css                   # Shared base styles (light mode)
+  ├── darkMode.css                # All dark mode overrides ([data-theme="dark"])
+  │
+  ├── dashboard/
+  │   ├── dashboard.html          # Dashboard page
+  │   ├── dashboard.js            # Dashboard logic (export, import, auto-backup UI)
+  │   └── dashboard.css          # Dashboard-specific styles
+  │
+  ├── utils/
+  │   ├── date.js                 # Date/time formatting
+  │   ├── events.js               # Global event delegation helper + image viewer init
+  │   ├── helpers.js              # Shared pure helpers (priority parsing, image compression)
+  │   ├── imageHandler.js         # Image preview in popup
+  │   ├── inputProcess.js         # Parses note input + priority tags
+  │   ├── editHandler.js          # Edit mode UI state (enter, reset, image removal)
+  │   ├── noteService.js          # Delete + update note handlers (popup)
+  │   ├── render.js               # renderElement + RenderNotes
+  │   ├── toggleDark.js           # Dark mode toggle (shared by popup + dashboard)
+  │   ├── urls.js                 # Active tab URL helpers (Promise-based)
+  │   │
+  │   ├── exportModal.js          # Export modal UI — site/format selection
+  │   ├── exporter.js             # Export runner — orchestrates all format generators
+  │   ├── importModal.js          # 3-step import modal — file ingestion, duplicate handling
+  │   ├── buildPayload.js         # Shared JSON envelope builder (used by export + auto-backup)
+  │   ├── autoBackupExporter.js   # Auto-backup scheduler — alarm setup, prefs, download trigger
+  │   │
+  │   └── exporters/
+  │       ├── exportHelpers.js    # Shared helpers (filename, zip, blob, README text)
+  │       ├── exportJSON.js       # JSON export
+  │       ├── exportMD.js         # Markdown export
+  │       ├── exportHTML.js       # Self-contained HTML export
+  │       ├── exportCSV.js        # CSV export
+  │       ├── exportTXT.js        # Plain text export
+  │       ├── exportPDF.js        # PDF export (via jsPDF)
+  │       └── exportXLSX.js       # XLSX export (via ExcelJS)
+  │
+  ├── libs/
+  │   ├── jspdf.min.js            # jsPDF library (PDF generation)
+  │   └── jszip.min.js            # JSZip library (ZIP generation)
+  │
+  └── assets/
+      ├── icons/
+      │   └── icon128.png         # Extension icon
+      └── svgs/
+          ├── darkMode.svg        # Theme toggle icon (shown in light mode)
+          ├── lightMode.svg       # Theme toggle icon (shown in dark mode)
+          ├── deleteCard.svg      # Delete site button icon (dashboard)
+          ├── drag-image.svg      # Drag-and-drop image hint icon
+          ├── nothingToShow.svg   # Empty state illustration
+          └── lookingToShow.svg   # Loading state illustration
 ```
 
 ---
@@ -257,6 +307,7 @@ All data operations go through `background.js` via `chrome.runtime.sendMessage`:
 | `GET_ALL` | — | `[{ url, data }]` |
 | `DELETE_SITE` | `{ url }` | — |
 | `NOTES_UPDATED` | `{ url }` | forwards to content script |
+| `BACKUP_COMPLETED` | `{ filename, timestamp }` | broadcasts to open dashboard tabs |
 
 The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, priority }`. Fields not included are preserved from the stored note. If `priority` changes, the note is automatically moved between priority buckets in the database.
 
@@ -275,13 +326,17 @@ The `updates` payload for `UPDATE_NOTE` accepts any subset of `{ note, img, prio
 - **Image compression** — images are resized to a max of 1200px and compressed via canvas before storing: JPEG at 0.75 quality, PNG lossless resize only
 - **Image viewer** — clicking a note image opens it full size in a new tab via a temporary blob URL; direct data URLs are blocked by Chrome's CSP
 - **Fullscreen hide** — the toggle pill listens for `fullscreenchange` on `document` and sets `display: none` on enter, `display: flex` on exit
+- **Export pipeline** — `utils/exporter.js` orchestrates all format generators; JSON is always emitted first, then each selected format runs in sequence with a 400 ms stagger to avoid download manager collisions; a shared `images.zip` is appended when MD, CSV, or TXT is included
+- **JSON envelope** — the standard backup format is built by `utils/buildPayload.js`, which is shared by both manual export and auto-backup so the output schema is always identical; only the `backupType` field differs (`"export"` vs `"auto"`)
+- **Auto-backup alarm** — `utils/autoBackupExporter.js` manages alarm scheduling via `chrome.alarms`; preferences are mirrored to both `localStorage` (for instant dashboard reads) and `chrome.storage.local` (so the background service worker can access them when the alarm fires)
+- **Import deduplication** — `utils/importModal.js` compares incoming notes against existing IndexedDB data by note `id`; duplicates are surfaced in step 3 with per-note and per-site overwrite controls before any data is written
 
 ---
 
 ## ⚠️ Known Issues & Limitations
 
-- **Notes are tied to the browser** — since data is stored in IndexedDB, clearing your browser data or cache will permanently delete all notes. There is no backup mechanism yet
-- **Uninstalling the extension deletes all data** — Chrome wipes all IndexedDB data scoped to the extension when it is uninstalled. Reinstalling will not recover your notes. Export your data before uninstalling once the export feature is available
+- **Notes are tied to the browser** — since data is stored in IndexedDB, clearing your browser data or cache will permanently delete all notes. Use the Export or Auto-backup feature to keep a copy safe
+- **Uninstalling the extension deletes all data** — Chrome wipes all IndexedDB data scoped to the extension when it is uninstalled. Reinstalling will not recover your notes. Export your data before uninstalling
 - **Chrome only** — Manifest V3 implementation differs between browsers; Firefox and Safari are not currently supported
 - **`autofocus` blocked in iframe** — Chrome blocks autofocus on inputs inside cross-origin iframes, so the popup input is focused manually via `setTimeout` instead
 - **Legacy uncompressed images** — images attached to notes before v1.1.1 are stored at full base64 size in IndexedDB. They will not be retroactively compressed. Re-attaching the image on an edit will compress it going forward
@@ -302,14 +357,11 @@ A: No — uninstalling the extension permanently deletes all your notes from Chr
 **Q: Chrome shows an error when I click Load unpacked.**
 A: Make sure you are selecting the folder that directly contains `manifest.json`. If you see an error, open the extracted folder and check that `manifest.json` is at the root level of the folder you are selecting.
 
-**Q: I can't open the `.rar` file.**
-A: You need an extraction tool. Download [WinRAR](https://www.rarlab.com/) on Windows or [The Unarchiver](https://theunarchiver.com/) on Mac. On Linux, run `sudo apt install unrar` then `unrar x filename.rar`.
-
 **Q: Where do I download the latest version?**
 A: Always download from the [Releases page](../../releases) of this repository. Do not use the green Code → Download ZIP button as it creates a nested folder structure.
 
 **Q: My notes disappeared after I cleared my browser data.**
-A: Notes are stored in Chrome's IndexedDB. Clearing browser data (cookies, cache, site data) will erase them. Until an export feature is added, avoid clearing site data for `chrome-extension://` origins.
+A: Notes are stored in Chrome's IndexedDB. Clearing browser data (cookies, cache, site data) will erase them. Use the Export feature or enable Auto-backup to keep a JSON copy of your notes safe.
 
 **Q: The priority tag isn't working — my note is showing as Normal.**
 A: The tag must be the last 4 characters of the input with no space before it. For example `Read this #IMP` — note there is a space before `#IMP` which means the full tag including the space is `#IMP` and the parser reads the last 4 characters as `#IMP`. Make sure there are no trailing spaces after the tag. This applies to both adding and editing notes.
@@ -332,6 +384,15 @@ A: If the page is in fullscreen mode, the pill hides automatically. Exit fullscr
 **Q: I added a note but it never appeared anywhere.**
 A: This was a rare race condition in versions before v1.1.1 where the active tab URL hadn't resolved yet when the note was saved. This is fixed in v1.1.1 — update to the latest version using the update script.
 
+**Q: How do I back up my notes automatically?**
+A: Open the Dashboard, click the **Auto-backup** panel in the header, toggle it on, and choose an interval. The backup fires automatically in the background and saves a JSON file to your Downloads folder inside a `TheWebNote-Backup` subfolder. You can also do a one-time manual export at any time via the **Export** button.
+
+**Q: Which export format should I use if I want to restore my notes later?**
+A: Use **JSON** — it is the only format that the Import feature can read. All other formats (HTML, PDF, Markdown, etc.) are for archiving and reading only. JSON is always included in every export automatically.
+
+**Q: I imported a backup but some notes show as duplicates. What does that mean?**
+A: A duplicate is a note whose `id` already exists in your current data — it was previously imported or is the same note you already have. In the import results screen you can choose to skip duplicates, overwrite them all, or decide per note.
+
 ---
 
 ## 🛡️ Trust & Security
@@ -344,7 +405,9 @@ TheWebNote is a manually loaded extension, which means Chrome will show it as "u
 | `activeTab` | To read the current tab's URL so notes are saved and loaded for the right website |
 | `tabs` | To open the Dashboard in a new tab and to forward note-update events to the content script |
 | `scripting` | To inject the floating toggle pill into web pages |
-| `storage` | Declared in the manifest but not actively used — all data goes through IndexedDB in the service worker |
+| `storage` | To persist auto-backup preferences so the background service worker can read them when an alarm fires |
+| `downloads` | To save exported and auto-backup files directly to your Downloads folder |
+| `alarms` | To schedule and fire periodic auto-backup events that survive browser restarts |
 | `host_permissions` (`<all_urls>`) | Required for the content script to run on every website so the floating pill can appear wherever you have notes |
 
 ### What the extension does NOT do
@@ -372,14 +435,12 @@ TheWebNote is designed with privacy as a core principle:
 - No analytics, no telemetry, no tracking of any kind
 - No account or sign-in required
 - The only external request made is to `https://www.google.com/s2/favicons` to fetch website favicons for display in the dashboard — no note content is ever included in this request
-- The extension requests only the permissions it needs: `storage`, `activeTab`, `tabs`, and `scripting`
+- The extension requests only the permissions it needs: `storage`, `activeTab`, `tabs`, `scripting`, `downloads`, and `alarms`
 
 ---
 
 ## 🚧 Planned Features
 
-- 📤 **Export notes** — download your note data in JSON, Markdown, plain text, or PDF format
-- 📥 **Import notes** — import previously exported data with automatic duplicate detection and conflict resolution
 - 📄 **Extract text from web pages** — select text on any page and save it directly as a note
 - 🖼️ **Drag and drop images** — drag an image directly into the input field to attach it to a note
 - 📸 **Screenshot webpage** — capture the current page and insert it directly as a note image
