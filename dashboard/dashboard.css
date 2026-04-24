@@ -928,6 +928,34 @@ header {
   background-color: #475569;
 }
 
+/* Scrollable body inside export modal — matches import modal scrollbar */
+#exportModal .modal-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+#exportModal .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+#exportModal .modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+#exportModal .modal-body::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+}
+#exportModal .modal-body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}
+[data-theme="dark"] #exportModal .modal-body {
+  scrollbar-color: #334155 transparent;
+}
+[data-theme="dark"] #exportModal .modal-body::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+[data-theme="dark"] #exportModal .modal-body::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
 /* ── Step indicator ── */
 .import-step-indicator {
   display: flex;
