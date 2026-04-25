@@ -244,8 +244,7 @@ TheWebNote/                       #load THIS into Chrome
   │       ├── exportHTML.js       # Self-contained HTML export
   │       ├── exportCSV.js        # CSV export
   │       ├── exportTXT.js        # Plain text export
-  │       ├── exportPDF.js        # PDF export (via jsPDF)
-  │       └── exportXLSX.js       # XLSX export (via ExcelJS)
+  │       └── exportPDF.js        # PDF export (via jsPDF)
   │
   ├── libs/
   │   ├── jspdf.min.js            # jsPDF library (PDF generation)
