@@ -133,6 +133,7 @@ async function runImport() {
 
   const backup = importState.parsedBackup;
   const results = [];
+  const seenInBatch = new Set(); // ── guard against duplicates within the backup itself
 
   for (const site of backup.sites) {
     const url       = site.url;
@@ -152,10 +153,11 @@ async function runImport() {
 
     for (const priority of ["important", "medium", "normal"]) {
       for (const note of (site.data[priority] || [])) {
-        if (existingIds.has(note.id)) {
+        if (existingIds.has(note.id) || seenInBatch.has(note.id)) {
           siteResult.duplicates.push({ ...note, _priority: priority });
         } else {
           siteResult.imported.push({ ...note, _priority: priority });
+          seenInBatch.add(note.id); // mark so it can't pass again in this batch
         }
       }
     }
@@ -344,7 +346,9 @@ async function commitImport() {
 
     // Write all non-duplicate notes
     for (const note of site.imported) {
-      await sendMessage({ action: "ADD_NOTE", url, note });
+      const { _priority, ...cleanNote } = note;
+      const noteToSave = { ...cleanNote, priority: _priority || cleanNote.priority };
+      await sendMessage({ action: "ADD_NOTE", url, note: noteToSave });
     }
 
     // Write duplicates that user opted to overwrite
@@ -460,6 +464,9 @@ export function initImportModal() {
 
   // ── Step 3 back ──
   document.getElementById("importBackBtn").addEventListener("click", () => {
+    importState.results       = [];
+    importState.overwriteAll  = {};
+    importState.overwriteNote = {};
     showStep(1);
   });
 }

@@ -61,6 +61,12 @@ function addNote(url, note) {
 
       const siteData = await getSiteNotes(url);
 
+      // ── Duplicate guard: skip if this ID already exists in any bucket ──
+      const alreadyExists = ["important", "medium", "normal"].some(p =>
+        siteData[p].some(n => n.id === note.id)
+      );
+      if (alreadyExists) return resolve(siteData);
+
       siteData[note.priority].push(note);
 
       const tx = db.transaction("notes", "readwrite");
