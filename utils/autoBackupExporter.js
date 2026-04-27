@@ -10,6 +10,7 @@ const CS_KEY = "webnoteAutoBackup"; // chrome.storage.local key
 // ── Intervals ─────────────────────────────────────────────────────────────────
 
 export const BACKUP_INTERVALS = [
+  { label: "Every 5 minutes", hours: 5/60}, // for development
   { label: "Every 3 hours", hours: 3 },
   { label: "Every 6 hours", hours: 6 },
   { label: "Every 9 hours", hours: 9 },
