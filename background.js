@@ -171,7 +171,7 @@ function updateNote(url, noteId, updates) {
         note:     updates.note     !== undefined ? updates.note     : foundNote.note,
         img:      updates.img      !== undefined ? updates.img      : foundNote.img,
         priority: updates.priority !== undefined ? updates.priority : foundNote.priority,
-        // id, createdAt, status are intentionally preserved unchanged
+        updatedAt : new Date().toISOString(),
       };
 
       const newPriority = updatedNote.priority;
